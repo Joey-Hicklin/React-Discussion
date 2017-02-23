@@ -2,16 +2,21 @@ var webpack = require('webpack');
 var path = require('path');
 
 module.exports = {
-	devtool: 'inline-source-map',
+	devtool: 'cheap-module-eval-source-map',
+	devServer: {
+        historyApiFallback:{
+            index:'build/index.html'
+        },
+    },
 	entry: [
 		'webpack-dev-server/client?http://127.0.0.1:8080/',
 		'webpack/hot/only-dev-server',
-		'./src'
+		'./dev/js/index.js'
 	],
 	output: {
-		path: path.join(__dirname, 'public'),
-		filename: 'bundle.js',
-		publicPath: '/public/'
+		path: path.join(__dirname, 'src'),
+		filename: 'js/bundle.min.js',
+		publicPath: '/src/'
 	},
 	resolve: {
 		modulesDirectories: ['node_modules', 'src'],
@@ -19,6 +24,10 @@ module.exports = {
 	},
 	module: {
 		loaders: [
+			{
+		        test: /\.json$/,
+		        loader: 'json-loader'
+		    },
 			{
 				test: /\.jsx?/,
 				exclude: /node_modules/,

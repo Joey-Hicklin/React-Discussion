@@ -1,0 +1,16 @@
+.topicWrapper{
+	text-align: center;
+	width: 70vw;
+	top: 6vw;
+	position: relative;
+
+	.activeTopic{
+		color: red;
+		font-size: 2vw;
+
+	}
+	.topicContent{
+		font-size: 5vw;
+
+	}
+}

@@ -1,0 +1,83 @@
+.xCenter {
+  left: 50%;
+  transform: translate(-50%); }
+
+.topicWrapper {
+  text-align: center;
+  width: 70vw;
+  top: 6vw;
+  position: relative; }
+  .topicWrapper .activeTopic {
+    color: red;
+    font-size: 2vw; }
+  .topicWrapper .topicContent {
+    font-size: 5vw; }
+
+.topicTop {
+  position: relative;
+  font-size: 2.5vw;
+  text-align: center;
+  top: 3vw; }
+
+.selectQuestion {
+  text-align: center;
+  font-size: 1.5vw;
+  margin-bottom: 2vw; }
+
+.selectButtonsWrapper {
+  position: relative;
+  width: 20vw;
+  top: 15vw; }
+
+.bigButtonWrapper {
+  width: 20vw;
+  position: relative;
+  top: 10vw; }
+  .bigButtonWrapper .speechesButton {
+    background-color: blue; }
+  .bigButtonWrapper .speakButton {
+    background-color: green; }
+
+.bigButton {
+  width: 20vw;
+  height: 4vw;
+  margin-bottom: 2vw;
+  font-size: 2.5vw; }
+
+body {
+  margin: 0; }
+
+#nullspeakRoot {
+  width: 100vw;
+  height: 100vh; }
+
+#app {
+  width: 100%;
+  height: 100%; }
+
+.fa-bars {
+  font-size: 2vw;
+  position: absolute;
+  top: 2vw;
+  right: 3vw;
+  z-index: 10; }
+
+.fa-bars:hover {
+  cursor: pointer; }
+
+.chevron {
+  font-size: 5vw;
+  top: 50%;
+  transform: translateY(-50%);
+  position: absolute; }
+
+.chevron:hover {
+  cursor: pointer; }
+
+.fa-chevron-left {
+  left: -5vw; }
+
+.fa-chevron-right {
+  right: -5vw; }
+
+/*# sourceMappingURL=style.css.map */

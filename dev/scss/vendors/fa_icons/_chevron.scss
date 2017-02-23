@@ -1,0 +1,15 @@
+.chevron{
+	font-size: 5vw;
+	top: 50%;
+	transform: translateY(-50%);
+	position: absolute;
+}
+.chevron:hover{
+	cursor: pointer;
+}
+.fa-chevron-left{
+	left: -5vw;
+}
+.fa-chevron-right{
+	right: -5vw;
+}
