@@ -21,5 +21,5 @@ var buildPostsSchema = new Schema({
     ]
 });
 
-const Post = mongoose. model('Posts', buildPostsSchema);
+const Post = mongoose. model('Post', buildPostsSchema);
 export default Post;
