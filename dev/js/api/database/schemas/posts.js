@@ -7,9 +7,13 @@ var buildPostsSchema = new Schema({
       ref : "users"
     },
     date_posted : Date,
-    response_to : {
+    response_post : {
       type : Schema.ObjectId,
       ref : "posts"
+    },
+    response_main : {
+      type : Schema.ObjectId,
+      ref : "topics"
     },
     response_in : Number,
     expiration : Date,
@@ -21,5 +25,5 @@ var buildPostsSchema = new Schema({
     ]
 });
 
-const Post = mongoose. model('Post', buildPostsSchema);
+const Post = mongoose.model('Post', buildPostsSchema);
 export default Post;
