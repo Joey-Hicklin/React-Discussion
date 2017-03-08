@@ -44,7 +44,6 @@ server.get('/', (req, res) => {
 server.get('/topics', (req, res) => {
 
   connectToDb(mongoose).then( (db) => {
-    //check req data for specific topic request, if none --> check local storage for current topic, if none --> fetch current main topic
     Topic.getRecentTopics( (err, topics) => {
       if(err){
         throw err;
@@ -57,8 +56,32 @@ server.get('/topics', (req, res) => {
 server.get('/topics/*', (req, res) => {
 
   connectToDb(mongoose).then( (db) => {
-    //check req data for specific topic request, if none --> check local storage for current topic, if none --> fetch current main topic
     Topic.getRecentTopics( (err, topics) => {
+      if(err){
+        throw err;
+      }
+      res.json(topics);
+    }, parseInt(req.path.slice(8)));
+  });
+});
+
+
+server.get('/futuretopics', (req, res) => {
+
+  connectToDb(mongoose).then( (db) => {
+    Topic.getFutureTopics( (err, topics) => {
+      if(err){
+        throw err;
+      }
+      res.json(topics);
+    }, 5);
+  });
+});
+
+server.get('/futuretopics/*', (req, res) => {
+
+  connectToDb(mongoose).then( (db) => {
+    Topic.getFutureTopics( (err, topics) => {
       if(err){
         throw err;
       }

@@ -88,6 +88,9 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	var startDate = new Date('03/06/2017 00:00:00');
+	var endDate = new Date('03/12/2017 23:59:59');
+
 	function getRandomInt(min, max) {
 	  min = Math.ceil(min);
 	  max = Math.floor(max);
@@ -181,7 +184,7 @@
 
 	  connectToDb(_mongoose2.default).then(function (db) {
 	    console.log('USERS ACCESSED');
-	    for (var i = 250 - 1; i >= 0; i--) {
+	    for (var i = 20 - 1; i >= 0; i--) {
 	      var middleNum = getRandomInt(1, 10);
 
 	      if (middleNum == 1) {
@@ -235,25 +238,24 @@
 
 	    var i = void 0,
 	        j = void 0;
-	    var startDate = new Date('02/27/2017 00:00:00');
-	    for (i = 1, j = startDate - 3 * 7 * 24 * 60 * 60 * 1000; i <= 5; i++, j = j + 7 * 24 * 60 * 60 * 1000) {
+	    for (i = 1, j = startDate - 15 * 7 * 24 * 60 * 60 * 1000; i <= 32; i++, j = j + 7 * 24 * 60 * 60 * 1000) {
 
-	      if (j <= startDate) {
-	        var newTopic = new _topics2.default({
-	          topic: "Test Topic " + i.toString(),
-	          dates_discussed: [new Date(j)]
-	        });
-	        newTopic.save(function (err, newTopic) {
-	          if (err) return console.error(err);
-	        });
-	      } else {
-	        var _newTopic = new _topics2.default({
-	          topic: "Test Topic " + i.toString()
-	        });
-	        _newTopic.save(function (err, newTopic) {
-	          if (err) return console.error(err);
-	        });
-	      }
+	      // if (j <= startDate){
+	      var newTopic = new _topics2.default({
+	        topic: "Test Topic " + i.toString(),
+	        dates_discussed: [new Date(j)]
+	      });
+	      newTopic.save(function (err, newTopic) {
+	        if (err) return console.error(err);
+	      });
+	      // } else{
+	      //   let newTopic = new Topic({
+	      //     topic : "Test Topic " + i.toString()
+	      //   });
+	      //   newTopic.save(function (err, newTopic) {
+	      //     if (err) return console.error(err);
+	      //   });
+	      // }
 	    }
 	  });
 
@@ -269,7 +271,7 @@
 	server.get('/build/mainposts', function (req, res) {
 
 	  connectToDb(_mongoose2.default).then(function (db) {
-	    _topics2.default.aggregate([{ $sort: { dates_discussed: -1 } }, { $limit: 1 }], function (err, topic) {
+	    _topics2.default.find({ 'dates_discussed.0': new Date(startDate) }, function (err, topic) {
 	      _users2.default.count({}, function (err, c) {
 	        _users2.default.find({}, '_id', function (err, user) {
 
@@ -338,7 +340,6 @@
 	  connectToDb(_mongoose2.default).then(function (db) {
 	    _users2.default.find({}, '_id', function (err, users) {
 	      if (err) return console.error(err);
-	      var endDate = new Date('02/27/2017 23:59:59');
 
 	      var _loop = function _loop() {
 	        var author = users[getRandomInt(0, users.length)]._id;
@@ -407,7 +408,7 @@
 	        for (var i = users.length - 1; i >= 0; i--) {
 	          var user = users[i]._id;
 	          var rated = [];
-	          for (var j = 50 - 1; j >= 0; j--) {
+	          for (var j = 300 - 1; j >= 0; j--) {
 	            var ratedStatement = statements[getRandomInt(0, statements.length)]._id;
 	            if (!rated.includes(ratedStatement)) {
 	              var rateSide = getRandomInt(0, 3);

@@ -10,6 +10,10 @@ import names from './database/test_data/names';
 import sIpsum from './database/test_data/statement_ipsum';
 
 
+const startDate = new Date('03/06/2017 00:00:00');
+const endDate = new Date('03/12/2017 23:59:59');
+
+
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -104,7 +108,7 @@ server.get('/build/users', (req, res) => {
 
   connectToDb(mongoose).then( (db) => {
     console.log('USERS ACCESSED');
-    for (var i = 250 - 1; i >= 0; i--) {
+    for (var i = 20 - 1; i >= 0; i--) {
       let middleNum = getRandomInt(1,10);
 
       if (middleNum == 1){
@@ -159,10 +163,9 @@ server.get('/build/topics', (req, res) => {
     console.log('TOPICS ACCESSED')
 
     let i,j;
-    let startDate = new Date('02/27/2017 00:00:00');
-    for (i = 1, j=(startDate - 3*7*24*60*60*1000); i <= 5; i++, j=j + 7*24*60*60*1000) {
+    for (i = 1, j=(startDate - 15*7*24*60*60*1000); i <= 32; i++, j=j + 7*24*60*60*1000) {
 
-      if (j <= startDate){
+      // if (j <= startDate){
         let newTopic = new Topic({
           topic : "Test Topic " + i.toString(),
           dates_discussed : [new Date(j)]
@@ -170,14 +173,14 @@ server.get('/build/topics', (req, res) => {
         newTopic.save(function (err, newTopic) {
           if (err) return console.error(err);
         });
-      } else{
-        let newTopic = new Topic({
-          topic : "Test Topic " + i.toString()
-        });
-        newTopic.save(function (err, newTopic) {
-          if (err) return console.error(err);
-        });
-      }
+      // } else{
+      //   let newTopic = new Topic({
+      //     topic : "Test Topic " + i.toString()
+      //   });
+      //   newTopic.save(function (err, newTopic) {
+      //     if (err) return console.error(err);
+      //   });
+      // }
     }
   });
 
@@ -195,10 +198,8 @@ server.get('/build/topics', (req, res) => {
 server.get('/build/mainposts', (req, res) => {
 
   connectToDb(mongoose).then( (db) => {
-    Topic.aggregate([
-        {$sort:{dates_discussed:-1}},
-        {$limit:1}
-      ],(err, topic) => {
+    Topic.find({ 'dates_discussed.0': new Date(startDate)}
+      ,(err, topic) => {
       User.count({}, (err, c) => {
         User.find({}, '_id', (err, user) => {
           
@@ -269,7 +270,6 @@ server.get('/build/posts', (req, res) => {
   connectToDb(mongoose).then( (db) => {
     User.find({}, '_id', (err, users) => {
       if (err) return console.error(err);
-      let endDate = new Date('02/27/2017 23:59:59');
 
       for (var i = 500 - 1; i >= 0; i--) {
         let author = users[getRandomInt(0,users.length)]._id;
@@ -335,7 +335,7 @@ server.get('/build/ratings', (req, res) => {
         for (var i = users.length - 1; i >= 0; i--) {
           let user = users[i]._id;
           let rated = [];
-          for (var j = 50 - 1; j >= 0; j--) {
+          for (var j = 300 - 1; j >= 0; j--) {
             let ratedStatement = statements[getRandomInt(0,statements.length)]._id;
             if(!rated.includes(ratedStatement)){
               let rateSide = getRandomInt(0,3);

@@ -116,7 +116,6 @@
 	server.get('/topics', function (req, res) {
 
 	  connectToDb(_mongoose2.default).then(function (db) {
-	    //check req data for specific topic request, if none --> check local storage for current topic, if none --> fetch current main topic
 	    _topics2.default.getRecentTopics(function (err, topics) {
 	      if (err) {
 	        throw err;
@@ -129,8 +128,31 @@
 	server.get('/topics/*', function (req, res) {
 
 	  connectToDb(_mongoose2.default).then(function (db) {
-	    //check req data for specific topic request, if none --> check local storage for current topic, if none --> fetch current main topic
 	    _topics2.default.getRecentTopics(function (err, topics) {
+	      if (err) {
+	        throw err;
+	      }
+	      res.json(topics);
+	    }, parseInt(req.path.slice(8)));
+	  });
+	});
+
+	server.get('/futuretopics', function (req, res) {
+
+	  connectToDb(_mongoose2.default).then(function (db) {
+	    _topics2.default.getFutureTopics(function (err, topics) {
+	      if (err) {
+	        throw err;
+	      }
+	      res.json(topics);
+	    }, 5);
+	  });
+	});
+
+	server.get('/futuretopics/*', function (req, res) {
+
+	  connectToDb(_mongoose2.default).then(function (db) {
+	    _topics2.default.getFutureTopics(function (err, topics) {
 	      if (err) {
 	        throw err;
 	      }
@@ -251,6 +273,10 @@
 
 	module.exports.getRecentTopics = function (callback, limit) {
 		Topic.find({ 'dates_discussed.0': { $lt: Date.now() } }, callback).sort({ 'dates_discussed.0': -1 }).limit(limit);
+	};
+
+	module.exports.getFutureTopics = function (callback, limit) {
+		Topic.find({ 'dates_discussed.0': { $gt: Date.now() } }, callback).sort({ 'dates_discussed.0': 1 }).limit(limit);
 	};
 
 	exports.default = Topic;
