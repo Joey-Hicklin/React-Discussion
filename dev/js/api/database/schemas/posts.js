@@ -17,6 +17,7 @@ var buildPostsSchema = new Schema({
     },
     response_in : Number,
     expiration : Date,
+    overall_rating : Number,
     statements : [
       {
         type : Schema.ObjectId,

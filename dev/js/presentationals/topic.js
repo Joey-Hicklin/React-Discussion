@@ -1,19 +1,19 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 
-export default class topic extends React.Component{
+export default class topic extends Component{
 // TODO replace class with varibale testing if active
 	render(){
 		return(
 			<div className="topicWrapper xCenter">
-				<div className="activeTopic">
+				<div className="activeTopic">{/* boolean testing current date, latest date_discussed, and expiration */}
 					Active
 				</div>
 				<div className="topicContent">
-					Should college be paid for by taxpayers?
+					{this.props.topic.content}{/* content from /topic response */}
 				</div>
-				<i className="fa fa-chevron-left chevron"></i>
-				<i className="fa fa-chevron-right chevron"></i>
+				<i className="fa fa-chevron-left chevron"></i>{/* boolean testing if another topic has been discussed earlier */}
+				<i className="fa fa-chevron-right chevron"></i>{/* boolean testing expiration */}
 			</div>
 		)
 	}

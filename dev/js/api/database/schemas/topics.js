@@ -8,5 +8,5 @@ var buildTopicsSchema = new Schema({
     ]
 });
 
-const Topic = mongoose. model('Topics', buildTopicsSchema);
+const Topic = mongoose.model('Topics', buildTopicsSchema);
 export default Topic;

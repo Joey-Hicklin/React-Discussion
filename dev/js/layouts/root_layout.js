@@ -1,5 +1,5 @@
 import React from 'react';
-import Topic from '../presentationals/topic';
+import Topic from '../containers/topic';
 import BigButtons from '../presentationals/big_buttons';
 
 

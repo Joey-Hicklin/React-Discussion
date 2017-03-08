@@ -6,8 +6,9 @@
   "scripts": {
     "start": "npm run serve | npm run dev",
     "serve": "./node_modules/.bin/http-server -p 8080",
-    "dev": "npm run api | webpack-dev-server -d --progress --colors --port 8090 --history-api-fallback",
+    "dev": "webpack-dev-server -d --progress --colors --port 8090 --history-api-fallback",
     "api": "babel-node ./src/js/api_server",
+    "testData": "babel-node ./src/js/test_data_server",
     "webpack-node":"webpack --config webpack.node.config.js --progress --watch"
   },
   "repository": {
@@ -43,7 +44,8 @@
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.1",
     "webpack-dev-middleware": "^1.6.1",
-    "webpack-hot-middleware": "^2.11.0"
+    "webpack-hot-middleware": "^2.11.0",
+    "rxjs": "^5.0.0-beta.12"
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",

@@ -33,10 +33,14 @@ var buildUsersSchema = new Schema({
 	      type : Schema.ObjectId,
 	      ref : "posts"
 	    }
-	  ]
+	  ],
+	  highest : {
+	  	type : Schema.ObjectId,
+      	ref : "posts"
+	  }
 	}
 });
 
-const User = mongoose. model('User', buildUsersSchema);
+const User = mongoose.model('User', buildUsersSchema);
 
 export default User;
