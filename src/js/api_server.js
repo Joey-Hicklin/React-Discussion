@@ -86,6 +86,17 @@
 	  return Math.floor(Math.random() * (max - min)) + min;
 	}
 
+	var dbToObject = function dbToObject(arr) {
+	  var result = {};
+	  for (var i = 0; i < arr.length; i++) {
+	    result[arr[i]._id] = arr[i].count;
+	  }
+	  result.agree = result.agree ? result.agree : 0;
+	  result.neutral = result.neutral ? result.neutral : 0;
+	  result.disagree = result.disagree ? result.disagree : 0;
+	  return result;
+	};
+
 	function connectToDb(mongoose) {
 	  return new Promise(function (resolve, reject) {
 	    if (mongoose.connection.readyState == 0) {
@@ -181,35 +192,7 @@
 	      if (err) {
 	        throw err;
 	      }
-	      var agree = void 0,
-	          neutral = void 0,
-	          disagree = void 0;
-	      if (numMainPosts.filter(function (e) {
-	        return e._id == "agree";
-	      }).length <= 0) {
-	        agree = 0;
-	      } else {
-	        agree = numMainPosts[0].count;
-	      }
-	      if (numMainPosts.filter(function (e) {
-	        return e._id == "neutral";
-	      }).length <= 0) {
-	        neutral = 0;
-	      } else {
-	        neutral = numMainPosts[2].count;
-	      }
-	      if (numMainPosts.filter(function (e) {
-	        return e._id == "disagree";
-	      }).length <= 0) {
-	        disagree = 0;
-	      } else {
-	        disagree = numMainPosts[1].count;
-	      }
-	      res.json({
-	        "agree": agree,
-	        "neutral": neutral,
-	        "disagree": disagree
-	      });
+	      res.json(dbToObject(numMainPosts));
 	    });
 	  });
 	});
@@ -286,35 +269,7 @@
 	      if (err) {
 	        throw err;
 	      }
-	      var agree = void 0,
-	          neutral = void 0,
-	          disagree = void 0;
-	      if (numPosts.filter(function (e) {
-	        return e._id == "agree";
-	      }).length <= 0) {
-	        agree = 0;
-	      } else {
-	        agree = numPosts[0].count;
-	      }
-	      if (numPosts.filter(function (e) {
-	        return e._id == "neutral";
-	      }).length <= 0) {
-	        neutral = 0;
-	      } else {
-	        neutral = numPosts[2].count;
-	      }
-	      if (numPosts.filter(function (e) {
-	        return e._id == "disagree";
-	      }).length <= 0) {
-	        disagree = 0;
-	      } else {
-	        disagree = numPosts[1].count;
-	      }
-	      res.json({
-	        "agree": agree,
-	        "neutral": neutral,
-	        "disagree": disagree
-	      });
+	      res.json(dbToObject(numPosts));
 	    });
 	  });
 	});
