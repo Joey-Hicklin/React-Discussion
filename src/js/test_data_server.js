@@ -344,14 +344,14 @@
 	      var _loop = function _loop() {
 	        var author = users[getRandomInt(0, users.length)]._id;
 
-	        _posts2.default.find({}, '_id date_posted', function (err, posts) {
+	        _statements2.default.find({}, '_id', function (err, statements) {
 	          if (err) return console.error(err);
-	          var thisPost = posts[getRandomInt(0, posts.length)];
+	          var thisStatement = statements[getRandomInt(0, statements.length)];
 
 	          var newPost = new _posts2.default({
 	            author: author,
-	            date_posted: new Date(getRandomInt(thisPost.date_posted.valueOf(), endDate.valueOf())),
-	            response_post: thisPost._id,
+	            date_posted: new Date(getRandomInt(startDate.valueOf(), endDate.valueOf())), // TODO: alter date to compensate for post time
+	            response_statement: thisStatement._id,
 	            response_in: getRandomInt(0, 3),
 	            expiration: endDate
 	          });
@@ -568,9 +568,9 @@
 	    ref: "users"
 	  },
 	  date_posted: Date,
-	  response_post: {
+	  response_statement: {
 	    type: Schema.ObjectId,
-	    ref: "posts"
+	    ref: "statements"
 	  },
 	  response_main: {
 	    type: Schema.ObjectId,

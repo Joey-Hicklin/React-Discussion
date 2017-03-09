@@ -7,9 +7,9 @@ var buildPostsSchema = new Schema({
       ref : "users"
     },
     date_posted : Date,
-    response_post : {
+    response_statement : {
       type : Schema.ObjectId,
-      ref : "posts"
+      ref : "statements"
     },
     response_main : {
       type : Schema.ObjectId,

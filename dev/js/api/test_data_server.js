@@ -274,14 +274,14 @@ server.get('/build/posts', (req, res) => {
       for (var i = 500 - 1; i >= 0; i--) {
         let author = users[getRandomInt(0,users.length)]._id;
 
-        Post.find({}, '_id date_posted', (err, posts) => {
+        Statement.find({}, '_id', (err, statements) => {
           if (err) return console.error(err);
-          let thisPost = posts[getRandomInt(0,posts.length)];
+          let thisStatement = statements[getRandomInt(0,statements.length)];
 
           let newPost = new Post({
             author : author,
-            date_posted : new Date(getRandomInt(thisPost.date_posted.valueOf(), endDate.valueOf())),
-            response_post : thisPost._id,
+            date_posted : new Date(getRandomInt(startDate.valueOf(), endDate.valueOf())), // TODO: alter date to compensate for post time
+            response_statement : thisStatement._id,
             response_in : getRandomInt(0,3),
             expiration : endDate
           });

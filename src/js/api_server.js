@@ -66,15 +66,15 @@
 
 	var _topics2 = _interopRequireDefault(_topics);
 
-	var _posts = __webpack_require__(6);
+	var _posts = __webpack_require__(7);
 
 	var _posts2 = _interopRequireDefault(_posts);
 
-	var _statements = __webpack_require__(7);
+	var _statements = __webpack_require__(9);
 
 	var _statements2 = _interopRequireDefault(_statements);
 
-	var _ratings = __webpack_require__(8);
+	var _ratings = __webpack_require__(10);
 
 	var _ratings2 = _interopRequireDefault(_ratings);
 
@@ -113,6 +113,13 @@
 	  res.send('Hello NullSpeak API');
 	});
 
+	//////////////////////////////////////////////////////////////////////////////////////////
+	//                                                                                      //
+	//                                      TOPICS                                          //
+	//                                                                                      //
+	//////////////////////////////////////////////////////////////////////////////////////////
+
+
 	server.get('/topics', function (req, res) {
 
 	  connectToDb(_mongoose2.default).then(function (db) {
@@ -125,7 +132,7 @@
 	  });
 	});
 
-	server.get('/topics/*', function (req, res) {
+	server.get('/topics/:limit', function (req, res) {
 
 	  connectToDb(_mongoose2.default).then(function (db) {
 	    _topics2.default.getRecentTopics(function (err, topics) {
@@ -133,7 +140,7 @@
 	        throw err;
 	      }
 	      res.json(topics);
-	    }, parseInt(req.path.slice(8)));
+	    }, parseInt(req.params.limit));
 	  });
 	});
 
@@ -149,7 +156,7 @@
 	  });
 	});
 
-	server.get('/futuretopics/*', function (req, res) {
+	server.get('/futuretopics/:limit', function (req, res) {
 
 	  connectToDb(_mongoose2.default).then(function (db) {
 	    _topics2.default.getFutureTopics(function (err, topics) {
@@ -157,7 +164,158 @@
 	        throw err;
 	      }
 	      res.json(topics);
-	    }, parseInt(req.path.slice(8)));
+	    }, parseInt(req.params.limit));
+	  });
+	});
+
+	//////////////////////////////////////////////////////////////////////////////////////////
+	//                                                                                      //
+	//                                      POSTS                                           //
+	//                                                                                      //
+	//////////////////////////////////////////////////////////////////////////////////////////
+
+
+	server.get('/posts', function (req, res) {
+	  connectToDb(_mongoose2.default).then(function (db) {
+	    _posts2.default.getNumMainPosts(function (err, numMainPosts) {
+	      if (err) {
+	        throw err;
+	      }
+	      var agree = void 0,
+	          neutral = void 0,
+	          disagree = void 0;
+	      if (numMainPosts.filter(function (e) {
+	        return e._id == "agree";
+	      }).length <= 0) {
+	        agree = 0;
+	      } else {
+	        agree = numMainPosts[0].count;
+	      }
+	      if (numMainPosts.filter(function (e) {
+	        return e._id == "neutral";
+	      }).length <= 0) {
+	        neutral = 0;
+	      } else {
+	        neutral = numMainPosts[2].count;
+	      }
+	      if (numMainPosts.filter(function (e) {
+	        return e._id == "disagree";
+	      }).length <= 0) {
+	        disagree = 0;
+	      } else {
+	        disagree = numMainPosts[1].count;
+	      }
+	      res.json({
+	        "agree": agree,
+	        "neutral": neutral,
+	        "disagree": disagree
+	      });
+	    });
+	  });
+	});
+
+	server.get('/posts/agree', function (req, res) {
+	  connectToDb(_mongoose2.default).then(function (db) {
+	    _posts2.default.getMainPosts(0, function (err, posts) {
+	      if (err) {
+	        throw err;
+	      }
+	      res.json(posts);
+	    });
+	  });
+	});
+
+	server.get('/posts/:statementId/agree', function (req, res) {
+	  connectToDb(_mongoose2.default).then(function (db) {
+	    _posts2.default.getPosts(0, req.params.statementId, function (err, posts) {
+	      if (err) {
+	        throw err;
+	      }
+	      res.json(posts);
+	    });
+	  });
+	});
+
+	server.get('/posts/neutral', function (req, res) {
+	  connectToDb(_mongoose2.default).then(function (db) {
+	    _posts2.default.getMainPosts(1, function (err, posts) {
+	      if (err) {
+	        throw err;
+	      }
+	      res.json(posts);
+	    });
+	  });
+	});
+
+	server.get('/posts/:statementId/neutral', function (req, res) {
+	  connectToDb(_mongoose2.default).then(function (db) {
+	    _posts2.default.getPosts(1, req.params.statementId, function (err, posts) {
+	      if (err) {
+	        throw err;
+	      }
+	      res.json(posts);
+	    });
+	  });
+	});
+
+	server.get('/posts/disagree', function (req, res) {
+	  connectToDb(_mongoose2.default).then(function (db) {
+	    _posts2.default.getMainPosts(2, function (err, posts) {
+	      if (err) {
+	        throw err;
+	      }
+	      res.json(posts);
+	    });
+	  });
+	});
+
+	server.get('/posts/:statementId/disagree', function (req, res) {
+	  connectToDb(_mongoose2.default).then(function (db) {
+	    _posts2.default.getPosts(2, req.params.statementId, function (err, posts) {
+	      if (err) {
+	        throw err;
+	      }
+	      res.json(posts);
+	    });
+	  });
+	});
+
+	server.get('/posts/:statementId', function (req, res) {
+	  connectToDb(_mongoose2.default).then(function (db) {
+	    _posts2.default.getNumPosts(req.params.statementId, function (err, numPosts) {
+	      if (err) {
+	        throw err;
+	      }
+	      var agree = void 0,
+	          neutral = void 0,
+	          disagree = void 0;
+	      if (numPosts.filter(function (e) {
+	        return e._id == "agree";
+	      }).length <= 0) {
+	        agree = 0;
+	      } else {
+	        agree = numPosts[0].count;
+	      }
+	      if (numPosts.filter(function (e) {
+	        return e._id == "neutral";
+	      }).length <= 0) {
+	        neutral = 0;
+	      } else {
+	        neutral = numPosts[2].count;
+	      }
+	      if (numPosts.filter(function (e) {
+	        return e._id == "disagree";
+	      }).length <= 0) {
+	        disagree = 0;
+	      } else {
+	        disagree = numPosts[1].count;
+	      }
+	      res.json({
+	        "agree": agree,
+	        "neutral": neutral,
+	        "disagree": disagree
+	      });
+	    });
 	  });
 	});
 
@@ -260,7 +418,7 @@
 		value: true
 	});
 
-	var _topics = __webpack_require__(9);
+	var _topics = __webpack_require__(6);
 
 	var _topics2 = _interopRequireDefault(_topics);
 
@@ -271,11 +429,21 @@
 
 	var Topic = module.exports = _topics2.default;
 
-	module.exports.getRecentTopics = function (callback, limit) {
+	module.exports.getRecentTopics = function (callback) {
+		var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5;
+
+		if (isNaN(limit)) {
+			limit = 5;
+		}
 		Topic.find({ 'dates_discussed.0': { $lt: Date.now() } }, callback).sort({ 'dates_discussed.0': -1 }).limit(limit);
 	};
 
-	module.exports.getFutureTopics = function (callback, limit) {
+	module.exports.getFutureTopics = function (callback) {
+		var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5;
+
+		if (isNaN(limit)) {
+			limit = 5;
+		}
 		Topic.find({ 'dates_discussed.0': { $gt: Date.now() } }, callback).sort({ 'dates_discussed.0': 1 }).limit(limit);
 	};
 
@@ -283,6 +451,98 @@
 
 /***/ },
 /* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var mongoose = __webpack_require__(2);
+	var Schema = mongoose.Schema;
+
+	var buildTopicsSchema = new Schema({
+	    topic: String,
+	    dates_discussed: [Date]
+	});
+
+	var Topic = mongoose.model('Topics', buildTopicsSchema);
+	exports.default = Topic;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _posts = __webpack_require__(8);
+
+	var _posts2 = _interopRequireDefault(_posts);
+
+	var _topics = __webpack_require__(6);
+
+	var _topics2 = _interopRequireDefault(_topics);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mongoose = __webpack_require__(2);
+
+
+	var Post = module.exports = _posts2.default;
+
+	module.exports.getNumMainPosts = function (callback) {
+		var recentDate = Date.now() - 7 * 24 * 60 * 60 * 1000;
+		_topics2.default.findOne({ $and: [{ 'dates_discussed.0': { $lt: Date.now() } }, { 'dates_discussed.0': { $gt: new Date(recentDate) } }] }, function (err, mainTopic) {
+			Post.aggregate([{ $match: { response_main: mainTopic._id } }, { $group: {
+					_id: {
+						$cond: {
+							if: { $eq: ["$response_in", 0] }, then: "agree", else: {
+								$cond: { if: { $eq: ["$response_in", 1] }, then: "neutral", else: {
+										$cond: { if: { $eq: ["$response_in", 2] }, then: "disagree", else: false }
+									} }
+							}
+						}
+					},
+					count: { $sum: 1 }
+				} }, { $sort: { _id: 1 } }], callback);
+		});
+	};
+
+	module.exports.getNumPosts = function (statementId, callback) {
+		var _id = mongoose.Types.ObjectId(statementId);
+		Post.aggregate([{ $match: { 'response_statement': _id } }, { $group: {
+				_id: {
+					$cond: {
+						if: { $eq: ["$response_in", 0] }, then: "agree", else: {
+							$cond: { if: { $eq: ["$response_in", 1] }, then: "neutral", else: {
+									$cond: { if: { $eq: ["$response_in", 2] }, then: "disagree", else: false }
+								} }
+						}
+					}
+				},
+				count: { $sum: 1 }
+			} }, { $sort: { _id: 1 } }], callback);
+	};
+
+	module.exports.getMainPosts = function (style, callback) {
+		var recentDate = Date.now() - 7 * 24 * 60 * 60 * 1000;
+		_topics2.default.findOne({ $and: [{ 'dates_discussed.0': { $lt: Date.now() } }, { 'dates_discussed.0': { $gt: new Date(recentDate) } }] }, function (err, mainTopic) {
+			Post.find({ 'response_main': mainTopic._id, 'response_in': style }, callback);
+		});
+	};
+
+	module.exports.getPosts = function (style, id, callback) {
+		Post.find({ 'response_statement': id, 'response_in': style }, callback);
+	};
+
+	exports.default = Post;
+
+/***/ },
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -299,9 +559,9 @@
 	    ref: "users"
 	  },
 	  date_posted: Date,
-	  response_post: {
+	  response_statement: {
 	    type: Schema.ObjectId,
-	    ref: "posts"
+	    ref: "statements"
 	  },
 	  response_main: {
 	    type: Schema.ObjectId,
@@ -320,7 +580,7 @@
 	exports.default = Post;
 
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -349,7 +609,7 @@
 	exports.default = Statement;
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -387,26 +647,6 @@
 
 	var Rating = mongoose.model('Ratings', buildRatingsSchema);
 	exports.default = Rating;
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var mongoose = __webpack_require__(2);
-	var Schema = mongoose.Schema;
-
-	var buildTopicsSchema = new Schema({
-	    topic: String,
-	    dates_discussed: [Date]
-	});
-
-	var Topic = mongoose.model('Topics', buildTopicsSchema);
-	exports.default = Topic;
 
 /***/ }
 /******/ ]);
