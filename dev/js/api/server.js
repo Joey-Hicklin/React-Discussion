@@ -1,11 +1,11 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import Name from './database/schemas/names';
-import User from './database/schemas/users';
+import User from './database/API_functions/users';
 import Topic from './database/API_functions/topics';
 import Post from './database/API_functions/posts';
 import Statement from './database/schemas/statements';
-import Rating from './database/schemas/ratings';
+import Rating from './database/API_functions/ratings';
 
 
 function getRandomInt(min, max) {
@@ -201,6 +201,53 @@ server.get('/posts/:statementId', (req, res) => {
         throw err;
       }
       res.json( dbToObject(numPosts) );
+    });
+  });
+});
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//                                      RATINGS                                         //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+server.get('/ratings/post/:postId', (req, res) => {
+  connectToDb(mongoose).then( (db) => {
+    Rating.getPostRatings( req.params.postId, (err, ratings) => {
+      if(err){
+        throw err;
+      }
+      res.json(ratings);
+    });
+  });
+});
+
+server.get('/ratings/statement/:statementId', (req, res) => {
+  connectToDb(mongoose).then( (db) => {
+    Rating.getStatementRatings( req.params.statementId, (err, ratings) => {
+      if(err){
+        throw err;
+      }
+      res.json(ratings);
+    });
+  });
+});
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//                                        USER                                          //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+server.get('/user/:userId', (req, res) => {
+  connectToDb(mongoose).then( (db) => {
+    User.getUser( req.params.userId, (err, user) => {
+      if(err){
+        throw err;
+      }
+      res.json(user);
     });
   });
 });

@@ -58,7 +58,7 @@
 
 	var _names2 = _interopRequireDefault(_names);
 
-	var _users = __webpack_require__(4);
+	var _users = __webpack_require__(12);
 
 	var _users2 = _interopRequireDefault(_users);
 
@@ -74,7 +74,7 @@
 
 	var _statements2 = _interopRequireDefault(_statements);
 
-	var _ratings = __webpack_require__(10);
+	var _ratings = __webpack_require__(11);
 
 	var _ratings2 = _interopRequireDefault(_ratings);
 
@@ -270,6 +270,51 @@
 	        throw err;
 	      }
 	      res.json(dbToObject(numPosts));
+	    });
+	  });
+	});
+
+	//////////////////////////////////////////////////////////////////////////////////////////
+	//                                                                                      //
+	//                                      RATINGS                                         //
+	//                                                                                      //
+	//////////////////////////////////////////////////////////////////////////////////////////
+
+	server.get('/ratings/post/:postId', function (req, res) {
+	  connectToDb(_mongoose2.default).then(function (db) {
+	    _ratings2.default.getPostRatings(req.params.postId, function (err, ratings) {
+	      if (err) {
+	        throw err;
+	      }
+	      res.json(ratings);
+	    });
+	  });
+	});
+
+	server.get('/ratings/statement/:statementId', function (req, res) {
+	  connectToDb(_mongoose2.default).then(function (db) {
+	    _ratings2.default.getStatementRatings(req.params.statementId, function (err, ratings) {
+	      if (err) {
+	        throw err;
+	      }
+	      res.json(ratings);
+	    });
+	  });
+	});
+
+	//////////////////////////////////////////////////////////////////////////////////////////
+	//                                                                                      //
+	//                                        USER                                          //
+	//                                                                                      //
+	//////////////////////////////////////////////////////////////////////////////////////////
+
+	server.get('/user/:userId', function (req, res) {
+	  connectToDb(_mongoose2.default).then(function (db) {
+	    _users2.default.getUser(req.params.userId, function (err, user) {
+	      if (err) {
+	        throw err;
+	      }
+	      res.json(user);
 	    });
 	  });
 	});
@@ -602,6 +647,70 @@
 
 	var Rating = mongoose.model('Ratings', buildRatingsSchema);
 	exports.default = Rating;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _ratings = __webpack_require__(10);
+
+	var _ratings2 = _interopRequireDefault(_ratings);
+
+	var _posts = __webpack_require__(8);
+
+	var _posts2 = _interopRequireDefault(_posts);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mongoose = __webpack_require__(2);
+
+
+	var Rating = module.exports = _ratings2.default;
+
+	module.exports.getPostRatings = function (id, callback) {
+		_posts2.default.findOne({ '_id': id }, function (err, post) {
+			Rating.find({ statement: { $in: post.statements } }, callback);
+		});
+	};
+
+	module.exports.getStatementRatings = function (id, callback) {
+		Rating.findOne({ 'statement': id }, callback);
+	};
+
+	exports.default = Rating;
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _users = __webpack_require__(4);
+
+	var _users2 = _interopRequireDefault(_users);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mongoose = __webpack_require__(2);
+
+
+	var User = module.exports = _users2.default;
+
+	module.exports.getUser = function (id, callback) {
+		User.findOne({ '_id': id }, callback);
+	};
+
+	exports.default = User;
 
 /***/ }
 /******/ ]);
