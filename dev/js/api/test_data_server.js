@@ -341,7 +341,6 @@ server.get('/build/ratings', (req, res) => {
               let rateSide = getRandomInt(0,3);
               let update = {};
 
-              // TRY AGGREGATING FIRST, THEN ADDING TO SET
               switch(rateSide){
                 case 0:
                   update = {$push: {WS: {user: user}}};

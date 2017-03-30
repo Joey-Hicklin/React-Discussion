@@ -414,7 +414,6 @@
 	              var rateSide = getRandomInt(0, 3);
 	              var update = {};
 
-	              // TRY AGGREGATING FIRST, THEN ADDING TO SET
 	              switch (rateSide) {
 	                case 0:
 	                  update = { $push: { WS: { user: user } } };

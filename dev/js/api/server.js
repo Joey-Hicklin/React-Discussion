@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import { connectToDb } from './database_connect';
 import Name from './database/schemas/names';
 import User from './database/API_functions/users';
 import Topic from './database/API_functions/topics';
@@ -8,13 +9,13 @@ import Statement from './database/schemas/statements';
 import Rating from './database/API_functions/ratings';
 
 
-function getRandomInt(min, max) {
+const getRandomInt = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-let dbToObject = (arr) => {
+const dbToObject = (arr) => {
   let result = {};
   for (var i=0; i<arr.length; i++) {
     result[arr[i]._id] = arr[i].count;
@@ -25,28 +26,12 @@ let dbToObject = (arr) => {
   return result;
 }
 
-function connectToDb(mongoose){
-  return new Promise(function(resolve, reject){
-    if (mongoose.connection.readyState == 0){
-      mongoose.connect('localhost:27017/nullspeakTEST', (err) => {
-        if (err) {
-          console.log('Err, could not connect to the database.');
-          reject();
-        } else {
-          let db = mongoose.connection;
-          console.log('connected to MONGO');
-          resolve(db);
-        }
-      });
-    } else {
-      let db = mongoose.connection;
-      console.log('still connected to MONGO...');
-      resolve(db);
-    }
-  });
-}
-
 var server = express();
+
+server.use( (req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:8090");
+  next();
+});
 
 server.get('/', (req, res) => {
 	res.send('Hello NullSpeak API');
@@ -60,52 +45,15 @@ server.get('/', (req, res) => {
 //////////////////////////////////////////////////////////////////////////////////////////
 
 
-server.get('/topics', (req, res) => {
+server.get('/topic/:date?', (req, res) => {
 
   connectToDb(mongoose).then( (db) => {
-    Topic.getRecentTopics( (err, topics) => {
+    Topic.getTopic( (err, topic) => {
       if(err){
         throw err;
       }
-      res.json(topics);
-    }, 5);
-  });
-});
-
-server.get('/topics/:limit', (req, res) => {
-
-  connectToDb(mongoose).then( (db) => {
-    Topic.getRecentTopics( (err, topics) => {
-      if(err){
-        throw err;
-      }
-      res.json(topics);
-    }, parseInt(req.params.limit));
-  });
-});
-
-
-server.get('/futuretopics', (req, res) => {
-
-  connectToDb(mongoose).then( (db) => {
-    Topic.getFutureTopics( (err, topics) => {
-      if(err){
-        throw err;
-      }
-      res.json(topics);
-    }, 5);
-  });
-});
-
-server.get('/futuretopics/:limit', (req, res) => {
-
-  connectToDb(mongoose).then( (db) => {
-    Topic.getFutureTopics( (err, topics) => {
-      if(err){
-        throw err;
-      }
-      res.json(topics);
-    }, parseInt(req.params.limit));
+      res.json(topic);
+    }, parseInt(req.params.date));
   });
 });
 

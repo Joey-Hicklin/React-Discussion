@@ -9,7 +9,7 @@
     "dev": "webpack-dev-server -d --progress --colors --port 8090 --history-api-fallback",
     "api": "babel-node ./src/js/api_server",
     "testData": "babel-node ./src/js/test_data_server",
-    "webpack-node":"webpack --config webpack.node.config.js --progress --watch"
+    "webpack-node": "webpack --config webpack.node.config.js --progress --watch"
   },
   "repository": {
     "type": "git",
@@ -23,12 +23,14 @@
   "homepage": "https://github.com/Joey-Hicklin/React-Discussion#readme",
   "dependencies": {
     "assert": "^1.4.1",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-register": "^6.9.0",
     "cross-env": "^1.0.8",
     "css-loader": "^0.23.1",
     "expect": "^1.20.1",
     "express": "^4.14.1",
     "lodash": "^4.17.4",
+    "moment": "^2.18.1",
     "mongodb": "^2.2.24",
     "node-libs-browser": "^1.0.0",
     "node-sass": "^3.8.0",
@@ -38,14 +40,15 @@
     "react-redux": "^5.0.2",
     "react-router": "^3.0.2",
     "redux": "^3.6.0",
+    "redux-devtools-extension": "^2.13.0",
     "redux-logger": "^2.6.1",
     "redux-promise": "^0.5.3",
-    "redux-thunk": "^2.1.0",
+    "redux-thunk": "^2.2.0",
+    "rxjs": "^5.0.0-beta.12",
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.1",
     "webpack-dev-middleware": "^1.6.1",
-    "webpack-hot-middleware": "^2.11.0",
-    "rxjs": "^5.0.0-beta.12"
+    "webpack-hot-middleware": "^2.11.0"
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",

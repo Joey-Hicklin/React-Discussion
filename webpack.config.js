@@ -1,5 +1,13 @@
 var webpack = require('webpack');
 var path = require('path');
+var fs = require('fs');
+var nodeModules = {};
+
+fs.readdirSync(path.resolve(__dirname, 'node_modules'))
+    .filter(x => ['.bin'].indexOf(x) === -1)
+    .forEach(mod => { nodeModules[mod] = `commonjs ${mod}`; });
+
+
 
 module.exports = {
 	devtool: 'cheap-module-eval-source-map',

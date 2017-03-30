@@ -1,20 +1,17 @@
 var mongoose = require('mongoose');
+var moment = require('moment');
 import topic from '../schemas/topics';
 
 const Topic = module.exports = topic;
 
-module.exports.getRecentTopics = (callback, limit=5) => {
-	if(isNaN(limit)){
-		limit = 5;
+module.exports.getTopic = (callback, date=Date.now()) => {
+	if(isNaN(date)){
+		date = Date.now();
+	} else{
+		date = new Date(date);
 	}
-	Topic.find({'dates_discussed.0': { $lt: Date.now() } }, callback).sort({'dates_discussed.0': -1}).limit(limit);
-}
-
-module.exports.getFutureTopics = (callback, limit=5) => {
-	if(isNaN(limit)){
-		limit = 5;
-	}
-	Topic.find({'dates_discussed.0': { $gt: Date.now() } }, callback).sort({'dates_discussed.0': 1}).limit(limit);
+	const endDate = new Date(date-7*24*60*60*1000);
+	Topic.find().elemMatch('dates_discussed', {$lte: date, $gte: endDate}).limit(1).exec(callback);
 }
 
 export default Topic;

@@ -1,20 +1,52 @@
-// get topic listed in url (after checking in local storage), or
-// --> get current active topic (after checking local)
+import {combineReducers} from "redux";
 
-// set default state
+const topic = () => {
 
-const testDefault = {
-	content:"Test Topic 1",
-	dates_discussed: new Date("February 27, 2017 00:00:00")
+	const content = (state = "...Loading", action) => {
+		switch(action.type) {
+			case 'RECIEVE_TOPIC':
+				return action.payload[0].topic;
+				break;
+			default:
+				return state;
+				break;
+		}
+	};
+
+	const id = (state = {}, action) => {
+		switch(action.type) {
+			case 'RECIEVE_TOPIC':
+				return action.payload[0]._id;
+				break;
+			default:
+				return state;
+				break;
+		}
+	};
+
+	const isFetching = (state = false, action) => {
+		switch(action.type) {
+			case 'FETCH_TOPIC':
+				return true;
+				break;
+			case 'RECIEVE_TOPIC':
+				return false;
+				break;
+			default:
+				return state;
+				break;
+		}
+	};
+
+	return combineReducers({
+		id,
+		content,
+		isFetching
+	});
 };
 
-export const topic = (state = testDefault, action) => {
-	switch(action.type){
-		case "GET_TOPIC":
+export default topic;
 
-			break;
-
-		default:
-			return state;
-	}
-}
+export const getId = (state) => state.topic.id;
+export const getContent = (state) => state.topic.content;
+export const getIsFetching = (state) => state.topic.isFetching;

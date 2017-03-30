@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-
 export default class topic extends Component{
-// TODO replace class with varibale testing if active
+// TODO replace class with variable testing if active
+
 	render(){
 		return(
 			<div className="topicWrapper xCenter">
@@ -10,7 +10,7 @@ export default class topic extends Component{
 					Active
 				</div>
 				<div className="topicContent">
-					{this.props.topic.content}{/* content from /topic response */}
+					{this.props.content}{/* content from /topic response */}
 				</div>
 				<i className="fa fa-chevron-left chevron"></i>{/* boolean testing if another topic has been discussed earlier */}
 				<i className="fa fa-chevron-right chevron"></i>{/* boolean testing expiration */}
