@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var moment = require('moment');
 import topic from '../schemas/topics';
 
 const Topic = module.exports = topic;

@@ -68,15 +68,15 @@
 
 	var _topics2 = _interopRequireDefault(_topics);
 
-	var _posts = __webpack_require__(10);
+	var _posts = __webpack_require__(9);
 
 	var _posts2 = _interopRequireDefault(_posts);
 
-	var _statements = __webpack_require__(12);
+	var _statements = __webpack_require__(11);
 
 	var _statements2 = _interopRequireDefault(_statements);
 
-	var _ratings = __webpack_require__(13);
+	var _ratings = __webpack_require__(12);
 
 	var _ratings2 = _interopRequireDefault(_ratings);
 
@@ -439,7 +439,6 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var mongoose = __webpack_require__(2);
-	var moment = __webpack_require__(9);
 
 
 	var Topic = module.exports = _topics2.default;
@@ -480,12 +479,6 @@
 
 /***/ },
 /* 9 */
-/***/ function(module, exports) {
-
-	module.exports = require("moment");
-
-/***/ },
-/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -494,7 +487,7 @@
 		value: true
 	});
 
-	var _posts = __webpack_require__(11);
+	var _posts = __webpack_require__(10);
 
 	var _posts2 = _interopRequireDefault(_posts);
 
@@ -557,7 +550,7 @@
 	exports.default = Post;
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -595,7 +588,7 @@
 	exports.default = Post;
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -624,7 +617,7 @@
 	exports.default = Statement;
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -633,11 +626,11 @@
 		value: true
 	});
 
-	var _ratings = __webpack_require__(14);
+	var _ratings = __webpack_require__(13);
 
 	var _ratings2 = _interopRequireDefault(_ratings);
 
-	var _posts = __webpack_require__(11);
+	var _posts = __webpack_require__(10);
 
 	var _posts2 = _interopRequireDefault(_posts);
 
@@ -661,7 +654,7 @@
 	exports.default = Rating;
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";

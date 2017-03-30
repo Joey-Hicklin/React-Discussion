@@ -1,21 +1,21 @@
-const FETCH_NUM_POSTS = 'FETCH_NUM_POSTS';
-const RECIEVE_NUM_POSTS = 'RECIEVE_NUM_POSTS';
+const FETCH_POST_NUM = 'FETCH_POST_NUM';
+const RECIEVE_POST_NUM = 'RECIEVE_POST_NUM';
 
-export const fetchNumPosts = () => ({
-	type: FETCH_NUM_POSTS
+export const fetchPostNum = () => ({
+	type: FETCH_POST_NUM
 })
 
-export const recieveNumPosts = (data) => ({
-	type: RECIEVE_NUM_POSTS,
+export const recievePostNum = (data) => ({
+	type: RECIEVE_POST_NUM,
 	payload: data
 })
 
 export const fetchData = (id) => (dispatch) => {
-	dispatch(fetchNumPosts());
+	dispatch(fetchPostNum());
 
 	return fetch('http://127.0.0.1:8083/posts/'+id).then(res => {
 		res.json().then( data => {
-			dispatch(recieveNumPosts(data));
+			dispatch(recievePostNum(data));
 		});
 	});
 }

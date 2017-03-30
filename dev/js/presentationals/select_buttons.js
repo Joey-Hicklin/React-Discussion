@@ -11,7 +11,7 @@ export default class selectButtons extends Component{
 				</div>
 				<Link to="/topic/view/agree">
 					<button className="agreeButton bigButton">
-						Agreement <span>{this.props.AgreeNum}</span>
+						Agreement <span>{this.props.agreeNum}</span>
 					</button>
 				</Link>
 				<Link to="/topic/view/neutral">

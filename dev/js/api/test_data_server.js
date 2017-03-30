@@ -8,10 +8,11 @@ import Statement from './database/schemas/statements';
 import Rating from './database/schemas/ratings';
 import names from './database/test_data/names';
 import sIpsum from './database/test_data/statement_ipsum';
+import moment from 'moment';
 
 
-const startDate = new Date('03/06/2017 00:00:00');
-const endDate = new Date('03/12/2017 23:59:59');
+const date = Date.now();
+const endDate = new Date(date-7*24*60*60*1000);
 
 
 function getRandomInt(min, max) {
@@ -198,8 +199,9 @@ server.get('/build/topics', (req, res) => {
 server.get('/build/mainposts', (req, res) => {
 
   connectToDb(mongoose).then( (db) => {
-    Topic.find({ 'dates_discussed.0': new Date(startDate)}
-      ,(err, topic) => {
+    Topic.find().elemMatch('dates_discussed', {$lte: date, $gte: endDate}).limit(1)
+    .exec((err, topic) => {
+        console.log('Topics: ', topic);
       User.count({}, (err, c) => {
         User.find({}, '_id', (err, user) => {
           
@@ -221,6 +223,7 @@ server.get('/build/mainposts', (req, res) => {
                 expiration : new Date(originalDate + 7*24*60*60*1000)
               });
               newMainPost.save( (err, newPost) => {
+                console.log(newPost.date_posted);
                 if (err) return console.error(err);
 
                 let sNum = getRandomInt(0,5);

@@ -1,4 +1,5 @@
 import {combineReducers} from "redux";
+import postNum from './postNum';
 
 const topic = () => {
 
@@ -41,7 +42,8 @@ const topic = () => {
 	return combineReducers({
 		id,
 		content,
-		isFetching
+		isFetching,
+		postNum: postNum()
 	});
 };
 

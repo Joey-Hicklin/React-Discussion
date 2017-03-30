@@ -86,10 +86,14 @@
 
 	var _statement_ipsum2 = _interopRequireDefault(_statement_ipsum);
 
+	var _moment = __webpack_require__(11);
+
+	var _moment2 = _interopRequireDefault(_moment);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var startDate = new Date('03/06/2017 00:00:00');
-	var endDate = new Date('03/12/2017 23:59:59');
+	var date = Date.now();
+	var endDate = new Date(date - 7 * 24 * 60 * 60 * 1000);
 
 	function getRandomInt(min, max) {
 	  min = Math.ceil(min);
@@ -271,7 +275,8 @@
 	server.get('/build/mainposts', function (req, res) {
 
 	  connectToDb(_mongoose2.default).then(function (db) {
-	    _topics2.default.find({ 'dates_discussed.0': new Date(startDate) }, function (err, topic) {
+	    _topics2.default.find().elemMatch('dates_discussed', { $lte: date, $gte: endDate }).limit(1).exec(function (err, topic) {
+	      console.log('Topics: ', topic);
 	      _users2.default.count({}, function (err, c) {
 	        _users2.default.find({}, '_id', function (err, user) {
 
@@ -293,6 +298,7 @@
 	                expiration: new Date(originalDate + 7 * 24 * 60 * 60 * 1000)
 	              });
 	              newMainPost.save(function (err, newPost) {
+	                console.log(newPost.date_posted);
 	                if (err) return console.error(err);
 
 	                var sNum = getRandomInt(0, 5);
@@ -691,6 +697,12 @@
 	var sIpsum = "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which.";
 
 	exports.default = sIpsum;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	module.exports = require("moment");
 
 /***/ }
 /******/ ]);
