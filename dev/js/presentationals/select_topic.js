@@ -1,0 +1,12 @@
+import React from 'react';
+
+export default class selectTopic extends Component{
+
+	render(){
+		return (
+			<div className="topicTop xCenter">
+				{this.props.currentTopic}
+			</div>
+		)
+	}
+}

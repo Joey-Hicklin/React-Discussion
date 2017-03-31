@@ -6,6 +6,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 class SmartSelectButtons extends Component{
+	componentDidMount() {
+		this.props.fetchData();
+	}
+
 	render(){
 		const {...rest} = this.props;
 		return (<SelectButtons

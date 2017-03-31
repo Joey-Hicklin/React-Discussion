@@ -5,7 +5,7 @@ const postNum = () => {
 	const agree = (state = 0, action) => {
 		switch(action.type) {
 			case 'RECIEVE_POST_NUM':
-				return action.payload[0].agree;
+				return action.payload.agree;
 				break;
 			default:
 				return state;
@@ -16,7 +16,7 @@ const postNum = () => {
 	const neutral = (state = 0, action) => {
 		switch(action.type) {
 			case 'RECIEVE_POST_NUM':
-				return action.payload[0].neutral;
+				return action.payload.neutral;
 				break;
 			default:
 				return state;
@@ -27,7 +27,7 @@ const postNum = () => {
 	const disagree = (state = 0, action) => {
 		switch(action.type) {
 			case 'RECIEVE_POST_NUM':
-				return action.payload[0].disagree;
+				return action.payload.disagree;
 				break;
 			default:
 				return state;
@@ -35,10 +35,25 @@ const postNum = () => {
 		}
 	}
 
+	const isFetching = (state = false, action) => {
+		switch(action.type) {
+			case 'FETCH_POST_NUM':
+				return true;
+				break;
+			case 'RECIEVE_POST_NUM':
+				return false;
+				break;
+			default:
+				return state;
+				break;
+		}
+	};
+
 	return combineReducers({
 		agree,
 		neutral,
-		disagree
+		disagree,
+		isFetching
 	});
 }
 

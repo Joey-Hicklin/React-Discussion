@@ -10,7 +10,7 @@ export const recievePostNum = (data) => ({
 	payload: data
 })
 
-export const fetchData = (id) => (dispatch) => {
+export const fetchData = (id="") => (dispatch) => {
 	dispatch(fetchPostNum());
 
 	return fetch('http://127.0.0.1:8083/posts/'+id).then(res => {
