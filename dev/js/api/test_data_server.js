@@ -12,8 +12,31 @@ import moment from 'moment';
 
 
 const date = Date.now();
-const endDate = new Date(date-7*24*60*60*1000);
 
+let weekStart = new Date(date);
+weekStart = new Date(weekStart.setDate(weekStart.getDate()-weekStart.getDay()+1));
+weekStart = weekStart.setHours(0,0,0,0);
+
+const endDate = new Date(date-7*24*60*60*1000);
+const weekEnd = new Date((weekStart+7*24*60*60*1000)-1);
+
+Number.prototype.toBase = function (base) {
+    var symbols = 
+    "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    var decimal = this;
+    var conversion = "";
+
+    if (base > symbols.length || base <= 1) {
+        return false;
+    }
+
+    while (decimal >= 1) {
+        conversion = symbols[(decimal - (base * Math.floor(decimal / base)))] + conversion;
+        decimal = Math.floor(decimal / base);
+    }
+
+    return (base < 11) ? parseInt(conversion) : conversion;
+}
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -164,24 +187,16 @@ server.get('/build/topics', (req, res) => {
     console.log('TOPICS ACCESSED')
 
     let i,j;
-    for (i = 1, j=(startDate - 15*7*24*60*60*1000); i <= 32; i++, j=j + 7*24*60*60*1000) {
+    for (i = 1, j=(weekStart - 150*7*24*60*60*1000); i <= 400; i++, j=j + 7*24*60*60*1000) {
 
-      // if (j <= startDate){
         let newTopic = new Topic({
-          topic : "Test Topic " + i.toString(),
+          content : "Test Topic " + i.toString(),
+          short_id: i.toBase(62).padStart(2, "0"),
           dates_discussed : [new Date(j)]
         });
         newTopic.save(function (err, newTopic) {
           if (err) return console.error(err);
         });
-      // } else{
-      //   let newTopic = new Topic({
-      //     topic : "Test Topic " + i.toString()
-      //   });
-      //   newTopic.save(function (err, newTopic) {
-      //     if (err) return console.error(err);
-      //   });
-      // }
     }
   });
 
@@ -201,15 +216,12 @@ server.get('/build/mainposts', (req, res) => {
   connectToDb(mongoose).then( (db) => {
     Topic.find().elemMatch('dates_discussed', {$lte: date, $gte: endDate}).limit(1)
     .exec((err, topic) => {
-        console.log('Topics: ', topic);
       User.count({}, (err, c) => {
         User.find({}, '_id', (err, user) => {
-          
-          let originalDate = topic[0].dates_discussed[0].valueOf();
 
           for (var j = c - 1; j >= 0; j--) {
-            let datePosted1 = getRandomInt(originalDate, (originalDate + 5*24*60*59*1000));
-            let datePosted2 = getRandomInt((datePosted1 + 2*24*60*60*1000), (originalDate + 7*24*60*60*1000));
+            let datePosted1 = getRandomInt(weekStart, (weekStart + 5*24*60*59*1000));
+            let datePosted2 = getRandomInt((datePosted1 + 2*24*60*60*1000), (weekStart + 7*24*60*60*1000));
 
             for (var i = 1; i <= 2; i++) {
               let responseIn = getRandomInt(0,3);
@@ -220,17 +232,17 @@ server.get('/build/mainposts', (req, res) => {
                 date_posted : new Date(datePosted),
                 response_main : topic[0]._id,
                 response_in : responseIn,
-                expiration : new Date(originalDate + 7*24*60*60*1000)
+                expiration : weekEnd
               });
               newMainPost.save( (err, newPost) => {
-                console.log(newPost.date_posted);
                 if (err) return console.error(err);
 
                 let sNum = getRandomInt(0,5);
                 for (var i = 0; i <= sNum; i++) {
                   let content = sIpsum.slice(0, getRandomInt(50,352));
                   let newStatement = new Statement({
-                    content : content
+                    content : content,
+                    expiration : weekEnd
                   });
                   newStatement.save( (err, statement) => {
                     if (err) return console.error(err);
@@ -274,47 +286,53 @@ server.get('/build/posts', (req, res) => {
     User.find({}, '_id', (err, users) => {
       if (err) return console.error(err);
 
-      for (var i = 500 - 1; i >= 0; i--) {
-        let author = users[getRandomInt(0,users.length)]._id;
-
-        Statement.find({}, '_id', (err, statements) => {
+      for (var i = 100 - 1; i >= 0; i--) {
+        Statement.find({
+          expiration: weekEnd
+        })
+        .exec( (err, statements) => {
           if (err) return console.error(err);
-          let thisStatement = statements[getRandomInt(0,statements.length)];
+        
+          for (var i = 40 - 1; i >= 0; i--) {
+            let author = users[getRandomInt(0,users.length)]._id;
+            let thisStatement = statements[getRandomInt(0,statements.length)];
 
-          let newPost = new Post({
-            author : author,
-            date_posted : new Date(getRandomInt(startDate.valueOf(), endDate.valueOf())), // TODO: alter date to compensate for post time
-            response_statement : thisStatement._id,
-            response_in : getRandomInt(0,3),
-            expiration : endDate
-          });
-          newPost.save( (err, post) => {
-            if (err) return console.error(err);
+            let newPost = new Post({
+              author : author,
+              date_posted : new Date(getRandomInt(date.valueOf(), endDate.valueOf())), // TODO: alter date to compensate for post time
+              response_statement : thisStatement._id,
+              response_in : getRandomInt(0,3),
+              expiration : weekEnd
+            });
+            newPost.save( (err, post) => {
+              if (err) return console.error(err);
 
-            let sNum = getRandomInt(0,5);
-            for (var i = 0; i <= sNum; i++) {
-              let content = sIpsum.slice(0, getRandomInt(50,352));
-              let newStatement = new Statement({
-                content : content
-              });
-              newStatement.save( (err, statement) => {
-                if (err) return console.error(err);
-
-                let newRating = new Rating({
-                  statement: statement._id
+              let sNum = getRandomInt(0,5);
+              for (var i = 0; i <= sNum; i++) {
+                let content = sIpsum.slice(0, getRandomInt(50,352));
+                let newStatement = new Statement({
+                  content : content,
+                  expiration : weekEnd
                 });
-                newRating.save( (err, rating) => {
+                newStatement.save( (err, statement) => {
                   if (err) return console.error(err);
 
-                  let conditions = { _id : newPost._id };
-                  let update = { $addToSet : { statements : statement._id }};  
-                  Post.findOneAndUpdate(conditions, update, (err, filledPost) => {
+                  let newRating = new Rating({
+                    statement: statement._id
+                  });
+                  newRating.save( (err, rating) => {
                     if (err) return console.error(err);
+
+                    let conditions = { _id : newPost._id };
+                    let update = { $addToSet : { statements : statement._id }};  
+                    Post.findOneAndUpdate(conditions, update, (err, filledPost) => {
+                      if (err) return console.error(err);
+                    });
                   });
                 });
-              });
-            }
-          });
+              }
+            });
+          }
         });
       }
     });

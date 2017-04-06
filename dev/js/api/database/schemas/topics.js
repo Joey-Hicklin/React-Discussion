@@ -2,10 +2,11 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var buildTopicsSchema = new Schema({
-    topic : String,
+    content : String,
     dates_discussed : [
         Date
-    ]
+    ],
+    short_id: String
 });
 
 const Topic = mongoose.model('Topics', buildTopicsSchema);

@@ -12,10 +12,10 @@ export const fetchTopic = () => {
 	}
 }
 
-export const fetchData = () => (dispatch) => {
+export const fetchData = (topicIDNum) => (dispatch) => {
 	dispatch(fetchTopic());
 
-	return fetch('http://127.0.0.1:8083/topic/').then(res => {
+	return fetch('http://127.0.0.1:8083/topic/'+topicIDNum).then(res => {
 		res.json().then( data => {
 			dispatch(recieveTopic(data));
 		});

@@ -1,17 +1,16 @@
 import React from 'react';
 import SelectButtons from '../containers/select_buttons';
+import SelectTopic from '../containers/select_topic';
 
 
-export default class selectLayout extends React.Component{
+const selectLayout = ({ params }) => (
+	<div className="selectWrapper">
+		<SelectTopic 
+			focusPath={params.focusPath}
+			topicToggle={params.t}
+		/>
+		<SelectButtons/>
+	</div>
+)
 
-	render(){
-		return(
-			<div className="selectWrapper">
-				<div className="topicTop xCenter">
-					Should college be paid for by taxpayers?
-				</div>
-				<SelectButtons/>
-			</div>
-		)
-	}
-}
+export default selectLayout;

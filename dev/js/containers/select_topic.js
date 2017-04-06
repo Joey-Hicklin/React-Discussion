@@ -4,6 +4,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 class SmartSelectTopic extends Component{
+	componentWillMount() {
+		this.props.decodeFocusPath(this.props.topicToggle, this.props.focusPath);
+	}
+
 	render(){
 		const {...rest} = this.props;
 		return (<SelectTopic
@@ -12,9 +16,20 @@ class SmartSelectTopic extends Component{
 	}
 }
 
-const mapStateToProps = (state) => {
-	return {
+const mapStateToProps = (state) => (
+	{
+		currentTopic: ""
 	}
-};
+);
 
-export default connect(mapStateToProps, actions)(SmartSelectTopic);
+const mapDispatchToProps = (dispatch) => (
+	{
+		decodeFocusPath: (topicToggle, focusPath) => {
+			console.log(`
+				Topic?: ${topicToggle}
+				Focus Path: ${focusPath}`);
+		}
+	}
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(SmartSelectTopic);

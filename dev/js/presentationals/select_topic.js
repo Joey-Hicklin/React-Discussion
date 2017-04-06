@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 export default class selectTopic extends Component{
 
 	render(){
 		return (
 			<div className="topicTop xCenter">
-				{this.props.currentTopic}
+				{this.props.focusPath}
 			</div>
 		)
 	}

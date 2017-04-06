@@ -53,7 +53,7 @@ server.get('/topic/:date?', (req, res) => {
         throw err;
       }
       res.json(topic);
-    }, parseInt(req.params.date));
+    }, req.params.date);
   });
 });
 
@@ -87,17 +87,6 @@ server.get('/posts/agree', (req, res) => {
   });
 });
 
-server.get('/posts/:statementId/agree', (req, res) => {
-  connectToDb(mongoose).then( (db) => {
-    Post.getPosts( 0, req.params.statementId, (err, posts) => {
-      if(err){
-        throw err;
-      }
-      res.json(posts);
-    });
-  });
-});
-
 server.get('/posts/neutral', (req, res) => {
   connectToDb(mongoose).then( (db) => {
     Post.getMainPosts( 1, (err, posts) => {
@@ -109,9 +98,9 @@ server.get('/posts/neutral', (req, res) => {
   });
 });
 
-server.get('/posts/:statementId/neutral', (req, res) => {
+server.get('/posts/disagree', (req, res) => {
   connectToDb(mongoose).then( (db) => {
-    Post.getPosts( 1, req.params.statementId, (err, posts) => {
+    Post.getMainPosts( 2, (err, posts) => {
       if(err){
         throw err;
       }
@@ -120,9 +109,20 @@ server.get('/posts/:statementId/neutral', (req, res) => {
   });
 });
 
-server.get('/posts/disagree', (req, res) => {
+server.get('/posts/:statementId/agree', (req, res) => {
   connectToDb(mongoose).then( (db) => {
-    Post.getMainPosts( 2, (err, posts) => {
+    Post.getPosts( 0, req.params.statementId, (err, posts) => {
+      if(err){
+        throw err;
+      }
+      res.json(posts);
+    });
+  });
+});
+
+server.get('/posts/:statementId/neutral', (req, res) => {
+  connectToDb(mongoose).then( (db) => {
+    Post.getPosts( 1, req.params.statementId, (err, posts) => {
       if(err){
         throw err;
       }

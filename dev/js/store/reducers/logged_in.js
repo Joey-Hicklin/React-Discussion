@@ -1,7 +1,4 @@
-const testDefault = {
 
-};
-
-export const loggedIn = (state = testDefault, action) => {
+export const loggedIn = (state = {}, action) => {
   return state;
 }

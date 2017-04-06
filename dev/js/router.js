@@ -4,17 +4,13 @@ import MainLayout from './layouts/main_layout';
 import RootLayout from './layouts/root_layout';
 import SelectLayout from './layouts/select_layout';
 
-// Layouts / Page Wrappers
-
-
-// Pages / Containers
-
+// TODO duplicate SelectLayout route, one for topics, one for statements
 
 export default (
   <Router history={browserHistory}>
   		<Route component={MainLayout}>
-  			<Route path="/" component={RootLayout} />
-  			<Route path="topic/select" component={SelectLayout} />
+  			<Route path="/(:focusPath)" component={RootLayout} />
+  			<Route path="(:t/):focusPath/select" component={SelectLayout} />
   		</Route>
   </Router>
 );

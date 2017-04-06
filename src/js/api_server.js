@@ -125,7 +125,7 @@
 	        throw err;
 	      }
 	      res.json(topic);
-	    }, parseInt(req.params.date));
+	    }, req.params.date);
 	  });
 	});
 
@@ -158,17 +158,6 @@
 	  });
 	});
 
-	server.get('/posts/:statementId/agree', function (req, res) {
-	  (0, _database_connect.connectToDb)(_mongoose2.default).then(function (db) {
-	    _posts2.default.getPosts(0, req.params.statementId, function (err, posts) {
-	      if (err) {
-	        throw err;
-	      }
-	      res.json(posts);
-	    });
-	  });
-	});
-
 	server.get('/posts/neutral', function (req, res) {
 	  (0, _database_connect.connectToDb)(_mongoose2.default).then(function (db) {
 	    _posts2.default.getMainPosts(1, function (err, posts) {
@@ -180,9 +169,9 @@
 	  });
 	});
 
-	server.get('/posts/:statementId/neutral', function (req, res) {
+	server.get('/posts/disagree', function (req, res) {
 	  (0, _database_connect.connectToDb)(_mongoose2.default).then(function (db) {
-	    _posts2.default.getPosts(1, req.params.statementId, function (err, posts) {
+	    _posts2.default.getMainPosts(2, function (err, posts) {
 	      if (err) {
 	        throw err;
 	      }
@@ -191,9 +180,20 @@
 	  });
 	});
 
-	server.get('/posts/disagree', function (req, res) {
+	server.get('/posts/:statementId/agree', function (req, res) {
 	  (0, _database_connect.connectToDb)(_mongoose2.default).then(function (db) {
-	    _posts2.default.getMainPosts(2, function (err, posts) {
+	    _posts2.default.getPosts(0, req.params.statementId, function (err, posts) {
+	      if (err) {
+	        throw err;
+	      }
+	      res.json(posts);
+	    });
+	  });
+	});
+
+	server.get('/posts/:statementId/neutral', function (req, res) {
+	  (0, _database_connect.connectToDb)(_mongoose2.default).then(function (db) {
+	    _posts2.default.getPosts(1, req.params.statementId, function (err, posts) {
 	      if (err) {
 	        throw err;
 	      }
@@ -446,10 +446,13 @@
 	module.exports.getTopic = function (callback) {
 		var date = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Date.now();
 
-		if (isNaN(date)) {
+		if (isNaN(date) || date.length !== 8) {
 			date = Date.now();
 		} else {
-			date = new Date(date);
+			var day = parseInt(date.slice(2, 4));
+			var month = parseInt(date.slice(0, 2)) - 1;
+			var year = parseInt(date.slice(4, 8));
+			date = new Date(year, month, day);
 		}
 		var endDate = new Date(date - 7 * 24 * 60 * 60 * 1000);
 		Topic.find().elemMatch('dates_discussed', { $lte: date, $gte: endDate }).limit(1).exec(callback);
@@ -470,8 +473,9 @@
 	var Schema = mongoose.Schema;
 
 	var buildTopicsSchema = new Schema({
-	    topic: String,
-	    dates_discussed: [Date]
+	    content: String,
+	    dates_discussed: [Date],
+	    short_id: String
 	});
 
 	var Topic = mongoose.model('Topics', buildTopicsSchema);
@@ -601,6 +605,7 @@
 
 	var buildStatementsSchema = new Schema({
 	  content: String,
+	  expiration: Date,
 	  current: Boolean,
 	  has_edits: Boolean,
 	  new_edited: {

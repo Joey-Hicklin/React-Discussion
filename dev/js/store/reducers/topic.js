@@ -6,7 +6,7 @@ const topic = () => {
 	const content = (state = "...Loading", action) => {
 		switch(action.type) {
 			case 'RECIEVE_TOPIC':
-				return action.payload[0].topic;
+				return action.payload[0].content;
 				break;
 			default:
 				return state;
@@ -17,7 +17,7 @@ const topic = () => {
 	const id = (state = {}, action) => {
 		switch(action.type) {
 			case 'RECIEVE_TOPIC':
-				return action.payload[0]._id;
+				return action.payload[0].short_id;
 				break;
 			default:
 				return state;
@@ -52,3 +52,5 @@ export default topic;
 export const getId = (state) => state.topic.id;
 export const getContent = (state) => state.topic.content;
 export const getIsFetching = (state) => state.topic.isFetching;
+// export const getArrayTopic = (state) => state.topic.isFetching;
+// export const getLocalTopic = (state) => state.topic.isFetching;

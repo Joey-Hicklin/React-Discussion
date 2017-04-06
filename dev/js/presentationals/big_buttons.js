@@ -1,18 +1,17 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {Link} from 'react-router';
 
 
-export default class bigButton extends React.Component{
-
+class bigButton extends Component{
 	render(){
 		return(
 			<div className="bigButtonWrapper xCenter">
-				<Link to="topic/select">
+				<Link to={this.props.focusPath + "/select"}>
 					<button className="speechesButton bigButton">
 						Read
 					</button>
 				</Link>
-				<Link to="topic/respond">
+				<Link to={this.props.focusPath + "/respond"}>
 					<button className="speakButton bigButton">
 						Speak
 					</button>
@@ -21,3 +20,5 @@ export default class bigButton extends React.Component{
 		)
 	}
 }
+
+export default bigButton;

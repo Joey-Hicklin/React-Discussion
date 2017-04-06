@@ -60,5 +60,5 @@ const postNum = () => {
 export default postNum;
 
 export const getAgreeNum = (state) => state.topic.postNum.agree;  //TODO needs dynamic starting location for POST or TOPIC
-export const getNeutralNum = (state) => state.topic.postNum.neutral;
+export const getNeutralNum = (state) => state.topic.postNum.neutral; // use FILTER to retrieve proper dynamic info
 export const getDisagreeNum = (state) => state.topic.postNum.disagree;

@@ -1,16 +1,13 @@
 import React from 'react';
 import Topic from '../containers/topic';
-import BigButtons from '../presentationals/big_buttons';
+import BigButtons from '../containers/big_buttons';
 
 
-export default class rootLayout extends React.Component{
+const rootLayout = () => (
+	<div className="pageWrapper">
+		<Topic />
+		<BigButtons />
+	</div>
+);
 
-	render(){
-		return(
-			<div className="pageWrapper">
-				<Topic />
-				<BigButtons />
-			</div>
-		)
-	}
-}
+export default rootLayout;

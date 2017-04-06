@@ -3,6 +3,7 @@ var Schema = mongoose.Schema;
 
 var buildStatementsSchema = new Schema({
     content : String,
+    expiration: Date,
     current : Boolean,
     has_edits : Boolean,
     new_edited : {

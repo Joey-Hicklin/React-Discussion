@@ -93,7 +93,30 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var date = Date.now();
+
+	var weekStart = new Date(date);
+	weekStart = new Date(weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1));
+	weekStart = weekStart.setHours(0, 0, 0, 0);
+
 	var endDate = new Date(date - 7 * 24 * 60 * 60 * 1000);
+	var weekEnd = new Date(weekStart + 7 * 24 * 60 * 60 * 1000 - 1);
+
+	Number.prototype.toBase = function (base) {
+	  var symbols = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+	  var decimal = this;
+	  var conversion = "";
+
+	  if (base > symbols.length || base <= 1) {
+	    return false;
+	  }
+
+	  while (decimal >= 1) {
+	    conversion = symbols[decimal - base * Math.floor(decimal / base)] + conversion;
+	    decimal = Math.floor(decimal / base);
+	  }
+
+	  return base < 11 ? parseInt(conversion) : conversion;
+	};
 
 	function getRandomInt(min, max) {
 	  min = Math.ceil(min);
@@ -242,24 +265,16 @@
 
 	    var i = void 0,
 	        j = void 0;
-	    for (i = 1, j = startDate - 15 * 7 * 24 * 60 * 60 * 1000; i <= 32; i++, j = j + 7 * 24 * 60 * 60 * 1000) {
+	    for (i = 1, j = weekStart - 150 * 7 * 24 * 60 * 60 * 1000; i <= 400; i++, j = j + 7 * 24 * 60 * 60 * 1000) {
 
-	      // if (j <= startDate){
 	      var newTopic = new _topics2.default({
-	        topic: "Test Topic " + i.toString(),
+	        content: "Test Topic " + i.toString(),
+	        short_id: i.toBase(62).padStart(2, "0"),
 	        dates_discussed: [new Date(j)]
 	      });
 	      newTopic.save(function (err, newTopic) {
 	        if (err) return console.error(err);
 	      });
-	      // } else{
-	      //   let newTopic = new Topic({
-	      //     topic : "Test Topic " + i.toString()
-	      //   });
-	      //   newTopic.save(function (err, newTopic) {
-	      //     if (err) return console.error(err);
-	      //   });
-	      // }
 	    }
 	  });
 
@@ -276,15 +291,12 @@
 
 	  connectToDb(_mongoose2.default).then(function (db) {
 	    _topics2.default.find().elemMatch('dates_discussed', { $lte: date, $gte: endDate }).limit(1).exec(function (err, topic) {
-	      console.log('Topics: ', topic);
 	      _users2.default.count({}, function (err, c) {
 	        _users2.default.find({}, '_id', function (err, user) {
 
-	          var originalDate = topic[0].dates_discussed[0].valueOf();
-
 	          for (var j = c - 1; j >= 0; j--) {
-	            var datePosted1 = getRandomInt(originalDate, originalDate + 5 * 24 * 60 * 59 * 1000);
-	            var datePosted2 = getRandomInt(datePosted1 + 2 * 24 * 60 * 60 * 1000, originalDate + 7 * 24 * 60 * 60 * 1000);
+	            var datePosted1 = getRandomInt(weekStart, weekStart + 5 * 24 * 60 * 59 * 1000);
+	            var datePosted2 = getRandomInt(datePosted1 + 2 * 24 * 60 * 60 * 1000, weekStart + 7 * 24 * 60 * 60 * 1000);
 
 	            for (var i = 1; i <= 2; i++) {
 	              var responseIn = getRandomInt(0, 3);
@@ -295,17 +307,17 @@
 	                date_posted: new Date(datePosted),
 	                response_main: topic[0]._id,
 	                response_in: responseIn,
-	                expiration: new Date(originalDate + 7 * 24 * 60 * 60 * 1000)
+	                expiration: weekEnd
 	              });
 	              newMainPost.save(function (err, newPost) {
-	                console.log(newPost.date_posted);
 	                if (err) return console.error(err);
 
 	                var sNum = getRandomInt(0, 5);
 	                for (var i = 0; i <= sNum; i++) {
 	                  var content = _statement_ipsum2.default.slice(0, getRandomInt(50, 352));
 	                  var newStatement = new _statements2.default({
-	                    content: content
+	                    content: content,
+	                    expiration: weekEnd
 	                  });
 	                  newStatement.save(function (err, statement) {
 	                    if (err) return console.error(err);
@@ -347,52 +359,57 @@
 	    _users2.default.find({}, '_id', function (err, users) {
 	      if (err) return console.error(err);
 
-	      var _loop = function _loop() {
-	        var author = users[getRandomInt(0, users.length)]._id;
-
-	        _statements2.default.find({}, '_id', function (err, statements) {
+	      for (var i = 100 - 1; i >= 0; i--) {
+	        _statements2.default.find({
+	          expiration: weekEnd
+	        }).exec(function (err, statements) {
 	          if (err) return console.error(err);
-	          var thisStatement = statements[getRandomInt(0, statements.length)];
 
-	          var newPost = new _posts2.default({
-	            author: author,
-	            date_posted: new Date(getRandomInt(startDate.valueOf(), endDate.valueOf())), // TODO: alter date to compensate for post time
-	            response_statement: thisStatement._id,
-	            response_in: getRandomInt(0, 3),
-	            expiration: endDate
-	          });
-	          newPost.save(function (err, post) {
-	            if (err) return console.error(err);
+	          var _loop = function _loop() {
+	            var author = users[getRandomInt(0, users.length)]._id;
+	            var thisStatement = statements[getRandomInt(0, statements.length)];
 
-	            var sNum = getRandomInt(0, 5);
-	            for (var i = 0; i <= sNum; i++) {
-	              var content = _statement_ipsum2.default.slice(0, getRandomInt(50, 352));
-	              var newStatement = new _statements2.default({
-	                content: content
-	              });
-	              newStatement.save(function (err, statement) {
-	                if (err) return console.error(err);
+	            var newPost = new _posts2.default({
+	              author: author,
+	              date_posted: new Date(getRandomInt(date.valueOf(), endDate.valueOf())), // TODO: alter date to compensate for post time
+	              response_statement: thisStatement._id,
+	              response_in: getRandomInt(0, 3),
+	              expiration: weekEnd
+	            });
+	            newPost.save(function (err, post) {
+	              if (err) return console.error(err);
 
-	                var newRating = new _ratings2.default({
-	                  statement: statement._id
+	              var sNum = getRandomInt(0, 5);
+	              for (var i = 0; i <= sNum; i++) {
+	                var content = _statement_ipsum2.default.slice(0, getRandomInt(50, 352));
+	                var newStatement = new _statements2.default({
+	                  content: content,
+	                  expiration: weekEnd
 	                });
-	                newRating.save(function (err, rating) {
+	                newStatement.save(function (err, statement) {
 	                  if (err) return console.error(err);
 
-	                  var conditions = { _id: newPost._id };
-	                  var update = { $addToSet: { statements: statement._id } };
-	                  _posts2.default.findOneAndUpdate(conditions, update, function (err, filledPost) {
+	                  var newRating = new _ratings2.default({
+	                    statement: statement._id
+	                  });
+	                  newRating.save(function (err, rating) {
 	                    if (err) return console.error(err);
+
+	                    var conditions = { _id: newPost._id };
+	                    var update = { $addToSet: { statements: statement._id } };
+	                    _posts2.default.findOneAndUpdate(conditions, update, function (err, filledPost) {
+	                      if (err) return console.error(err);
+	                    });
 	                  });
 	                });
-	              });
-	            }
-	          });
-	        });
-	      };
+	              }
+	            });
+	          };
 
-	      for (var i = 500 - 1; i >= 0; i--) {
-	        _loop();
+	          for (var i = 40 - 1; i >= 0; i--) {
+	            _loop();
+	          }
+	        });
 	      }
 	    });
 	  });
@@ -548,8 +565,9 @@
 	var Schema = mongoose.Schema;
 
 	var buildTopicsSchema = new Schema({
-	    topic: String,
-	    dates_discussed: [Date]
+	    content: String,
+	    dates_discussed: [Date],
+	    short_id: String
 	});
 
 	var Topic = mongoose.model('Topics', buildTopicsSchema);
@@ -607,6 +625,7 @@
 
 	var buildStatementsSchema = new Schema({
 	  content: String,
+	  expiration: Date,
 	  current: Boolean,
 	  has_edits: Boolean,
 	  new_edited: {
