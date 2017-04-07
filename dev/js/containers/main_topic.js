@@ -11,7 +11,7 @@ class SmartTopic extends Component{
 	componentWillMount() {
 		// if (this.props.arrayTopic === false) {
 		// 	if (this.props.localTopic === false){
-				this.props.fetchDataByShortID(this.props.topic);
+				this.props.fetchDataByDate();
 		// 	}else{
 		// 		// this.props.content = this.props.localTopic.content
 		// 	}
@@ -28,9 +28,9 @@ class SmartTopic extends Component{
 	}
 }
 
-const mapStateToProps = (state, { params }) => {
+const mapStateToProps = (state) => {
 	return {
-		content: getContent(state, params.focusPath)
+		content: getContent(state)
 	};
 }
 

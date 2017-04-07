@@ -3,21 +3,44 @@ import postNum from './postNum';
 
 const topic = () => {
 
-	const content = (state = "...Loading", action) => {
-		switch(action.type) {
-			case 'RECIEVE_TOPIC':
-				return action.payload[0].content;
-				break;
-			default:
-				return state;
-				break;
-		}
-	};
+	// const content = (state = "...Loading", action) => {
+	// 	switch(action.type) {
+	// 		case 'RECIEVE_TOPIC':
+	// 			return action.payload[0].content;
+	// 			break;
+	// 		default:
+	// 			return state;
+	// 			break;
+	// 	}
+	// };
 
-	const id = (state = {}, action) => {
+	// const id = (state = {}, action) => {
+	// 	switch(action.type) {
+	// 		case 'RECIEVE_TOPIC':
+	// 			return action.payload[0].short_id;
+	// 			break;
+	// 		default:
+	// 			return state;
+	// 			break;
+	// 	}
+	// };
+
+	const main = (state = {}, action) => {
 		switch(action.type) {
 			case 'RECIEVE_TOPIC':
-				return action.payload[0].short_id;
+
+				let weekStart = new Date(Date.now());
+				weekStart = new Date(weekStart.setDate(weekStart.getDate()-weekStart.getDay()+1));
+				weekStart = weekStart.setHours(0,0,0,0);
+				let latest = action.payload[0].dates_discussed.length-1;
+
+				let recievedDate = Date.parse(new Date(action.payload[0].dates_discussed[latest]));
+
+				if(recievedDate == weekStart){
+					return action.payload[0].short_id;
+				}else{
+					return state;
+				}
 				break;
 			default:
 				return state;
@@ -40,8 +63,9 @@ const topic = () => {
 	};
 
 	return combineReducers({
-		id,
-		content,
+		// id,
+		// content,
+		main,
 		isFetching,
 		postNum: postNum()
 	});
@@ -50,7 +74,6 @@ const topic = () => {
 export default topic;
 
 export const getId = (state) => state.topic.id;
-export const getContent = (state) => state.topic.content;
-export const getIsFetching = (state) => state.topic.isFetching;
+
 // export const getArrayTopic = (state) => state.topic.isFetching;
 // export const getLocalTopic = (state) => state.topic.isFetching;

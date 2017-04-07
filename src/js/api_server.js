@@ -120,12 +120,24 @@
 	server.get('/topic/:date?', function (req, res) {
 
 	  (0, _database_connect.connectToDb)(_mongoose2.default).then(function (db) {
-	    _topics2.default.getTopic(function (err, topic) {
+	    _topics2.default.getTopicByDate(function (err, topic) {
 	      if (err) {
 	        throw err;
 	      }
 	      res.json(topic);
 	    }, req.params.date);
+	  });
+	});
+
+	server.get('/topic/t/:shortID', function (req, res) {
+
+	  (0, _database_connect.connectToDb)(_mongoose2.default).then(function (db) {
+	    _topics2.default.getTopicByShortID(function (err, topic) {
+	      if (err) {
+	        throw err;
+	      }
+	      res.json(topic);
+	    }, req.params.shortID);
 	  });
 	});
 
@@ -443,7 +455,7 @@
 
 	var Topic = module.exports = _topics2.default;
 
-	module.exports.getTopic = function (callback) {
+	module.exports.getTopicByDate = function (callback) {
 		var date = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Date.now();
 
 		if (isNaN(date) || date.length !== 8) {
@@ -456,6 +468,10 @@
 		}
 		var endDate = new Date(date - 7 * 24 * 60 * 60 * 1000);
 		Topic.find().elemMatch('dates_discussed', { $lte: date, $gte: endDate }).limit(1).exec(callback);
+	};
+
+	module.exports.getTopicByShortID = function (callback, shortID) {
+		Topic.find({ 'short_id': shortID }).limit(1).exec(callback);
 	};
 
 	exports.default = Topic;

@@ -18,3 +18,11 @@ export const topics = (state = {}, action) => {
 		return state;
 	}
 }
+
+export const getContent = (state, ID=state.topic.main) => {
+	if(typeof ID !== 'string'){
+		return "...Loading"
+	}else{
+		return (state.topics[ID]) ? state.topics[ID].content : "...Loading"
+	}
+};

@@ -12,10 +12,20 @@ export const fetchTopic = () => {
 	}
 }
 
-export const fetchData = (topicIDNum) => (dispatch) => {
+export const fetchDataByDate = (date) => (dispatch) => {
 	dispatch(fetchTopic());
 
-	return fetch('http://127.0.0.1:8083/topic/'+topicIDNum).then(res => {
+	return fetch('http://127.0.0.1:8083/topic/'+date).then(res => {
+		res.json().then( data => {
+			dispatch(recieveTopic(data));
+		});
+	});
+};
+
+export const fetchDataByShortID = (shortID) => (dispatch) => {
+	dispatch(fetchTopic());
+
+	return fetch('http://127.0.0.1:8083/topic/t/'+shortID).then(res => {
 		res.json().then( data => {
 			dispatch(recieveTopic(data));
 		});

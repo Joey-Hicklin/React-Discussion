@@ -48,12 +48,24 @@ server.get('/', (req, res) => {
 server.get('/topic/:date?', (req, res) => {
 
   connectToDb(mongoose).then( (db) => {
-    Topic.getTopic( (err, topic) => {
+    Topic.getTopicByDate( (err, topic) => {
       if(err){
         throw err;
       }
       res.json(topic);
     }, req.params.date);
+  });
+});
+
+server.get('/topic/t/:shortID', (req, res) => {
+
+  connectToDb(mongoose).then( (db) => {
+    Topic.getTopicByShortID( (err, topic) => {
+      if(err){
+        throw err;
+      }
+      res.json(topic);
+    }, req.params.shortID);
   });
 });
 
