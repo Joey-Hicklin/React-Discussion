@@ -5,8 +5,8 @@ import BigButtons from '../containers/big_buttons';
 
 const rootLayout = ({ params }) => (
 	<div className="pageWrapper">
-		<Topic topic={params.focusPath}/>
-		<BigButtons />
+		<Topic focusPath={params.focusPath}/>
+		<BigButtons focusPath={params.focusPath}/>
 	</div>
 );
 

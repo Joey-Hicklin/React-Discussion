@@ -15,7 +15,7 @@ class SmartBigButtons extends Component{
 
 const mapStateToProps = (state) => {
 	return {
-		focusPath: "t/0a"
+		
 	}
 };
 

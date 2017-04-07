@@ -26,7 +26,7 @@ const mapDispatchToProps = (dispatch) => (
 	{
 		decodeFocusPath: (topicToggle, focusPath) => {
 			console.log(`
-				Topic?: ${topicToggle}
+				Topic: ${topicToggle === 't' ? true : false}
 				Focus Path: ${focusPath}`);
 		}
 	}

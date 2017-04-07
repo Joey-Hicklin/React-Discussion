@@ -11,7 +11,7 @@ class SmartTopic extends Component{
 	componentWillMount() {
 		// if (this.props.arrayTopic === false) {
 		// 	if (this.props.localTopic === false){
-				this.props.fetchDataByShortID(this.props.topic);
+				this.props.fetchDataByShortID(this.props.focusPath);
 		// 	}else{
 		// 		// this.props.content = this.props.localTopic.content
 		// 	}

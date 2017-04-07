@@ -3,10 +3,10 @@ import Topic from '../containers/main_topic';
 import BigButtons from '../containers/big_buttons';
 
 
-const rootLayout = () => (
+const rootLayout = ({ params }) => (
 	<div className="pageWrapper">
-		<Topic />
-		<BigButtons />
+		<Topic focusPath={params.focusPath}/>
+		<BigButtons focusPath={params.focusPath}/>
 	</div>
 );
 
