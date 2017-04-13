@@ -1,13 +1,14 @@
 import React from 'react';
-import Topic from '../containers/main_topic';
-import BigButtons from '../containers/big_buttons';
 
+import FocusContent from '../containers/focus_content_c';
+import BigButtons from '../containers/big_buttons_c';
+import Hamburger from '../containers/hamburger_c';
 
-const rootLayout = ({ params }) => (
-	<div className="pageWrapper">
-		<Topic focusPath={params.focusPath}/>
-		<BigButtons focusPath={params.focusPath}/>
-	</div>
+const rootLayout = ({ params, location }) => (
+	<Hamburger>
+		<FocusContent params={params} location={location} />
+		<BigButtons params={params} location={location} />
+	</Hamburger>
 );
 
 export default rootLayout;

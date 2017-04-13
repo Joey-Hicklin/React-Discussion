@@ -4,13 +4,9 @@ import Topic from '../schemas/topics';
 
 const Post = module.exports = post;
 
-module.exports.getNumMainPosts = (callback) => {
-	let recentDate = Date.now()-7*24*60*60*1000;
+module.exports.getNumMainPosts = (topicId, callback) => {
 	Topic.findOne(
-		{$and:[
-			{'dates_discussed.0':{ $lt:	Date.now() }},
-			{'dates_discussed.0':{ $gt:	new Date(recentDate)}}
-		] },
+		{ _id: topicId },
 		(err, mainTopic) => {
 			Post.aggregate([
 				{$match: {response_main: mainTopic._id}},
@@ -53,17 +49,9 @@ module.exports.getNumPosts = (statementId, callback) => {
 	], callback);
 }
 
-module.exports.getMainPosts = (style, callback) => {
-	let recentDate = Date.now()-7*24*60*60*1000;
-	Topic.findOne(
-		{$and:[
-			{'dates_discussed.0':{ $lt:	Date.now() }},
-			{'dates_discussed.0':{ $gt:	new Date(recentDate)}}
-		] },
-		(err, mainTopic) => {
-			Post.find({'response_main': mainTopic._id, 'response_in': style}, callback);
-		}
-	);
+module.exports.getMainPosts = (style, topicId, callback) => {
+	let _id = mongoose.Types.ObjectId(topicId);
+	Post.find({'response_main': _id, 'response_in': style}, callback);
 }
 
 module.exports.getPosts = (style, id, callback) => {

@@ -9,7 +9,6 @@ export const connectToDb = (mongoose) => {
           reject();
         } else {
           let db = mongoose.connection;
-          console.log('connected to MONGO');
           resolve(db);
         }
       });

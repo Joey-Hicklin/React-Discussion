@@ -53,6 +53,7 @@ server.get('/topic/:date?', (req, res) => {
         throw err;
       }
       res.json(topic);
+      mongoose.connection.close();
     }, req.params.date);
   });
 });
@@ -65,6 +66,7 @@ server.get('/topic/t/:shortID', (req, res) => {
         throw err;
       }
       res.json(topic);
+      mongoose.connection.close();
     }, req.params.shortID);
   });
 });
@@ -77,46 +79,50 @@ server.get('/topic/t/:shortID', (req, res) => {
 //////////////////////////////////////////////////////////////////////////////////////////
 
 
-server.get('/posts', (req, res) => {
+server.get('/posts/t/:topicId', (req, res) => {
   connectToDb(mongoose).then( (db) => {
-    Post.getNumMainPosts( (err, numMainPosts) => {
+    Post.getNumMainPosts( req.params.topicId, (err, numMainPosts) => {
       if(err){
         throw err;
       }
       res.json( dbToObject(numMainPosts) );
+      mongoose.connection.close();
     });
   });
 });
 
-server.get('/posts/agree', (req, res) => {
+server.get('/posts/t/:topicId/agree', (req, res) => {
   connectToDb(mongoose).then( (db) => {
-    Post.getMainPosts( 0, (err, posts) => {
+    Post.getMainPosts( 0, req.params.topicId, (err, posts) => {
       if(err){
         throw err;
       }
       res.json(posts);
+      mongoose.connection.close();
     });
   });
 });
 
-server.get('/posts/neutral', (req, res) => {
+server.get('/posts/t/:topicId/neutral', (req, res) => {
   connectToDb(mongoose).then( (db) => {
-    Post.getMainPosts( 1, (err, posts) => {
+    Post.getMainPosts( 1, req.params.topicId, (err, posts) => {
       if(err){
         throw err;
       }
       res.json(posts);
+      mongoose.connection.close();
     });
   });
 });
 
-server.get('/posts/disagree', (req, res) => {
+server.get('/posts/t/:topicId/disagree', (req, res) => {
   connectToDb(mongoose).then( (db) => {
-    Post.getMainPosts( 2, (err, posts) => {
+    Post.getMainPosts( 2, req.params.topicId, (err, posts) => {
       if(err){
         throw err;
       }
       res.json(posts);
+      mongoose.connection.close();
     });
   });
 });
@@ -128,6 +134,7 @@ server.get('/posts/:statementId/agree', (req, res) => {
         throw err;
       }
       res.json(posts);
+      mongoose.connection.close();
     });
   });
 });
@@ -139,6 +146,7 @@ server.get('/posts/:statementId/neutral', (req, res) => {
         throw err;
       }
       res.json(posts);
+      mongoose.connection.close();
     });
   });
 });
@@ -150,6 +158,7 @@ server.get('/posts/:statementId/disagree', (req, res) => {
         throw err;
       }
       res.json(posts);
+      mongoose.connection.close();
     });
   });
 });
@@ -161,6 +170,7 @@ server.get('/posts/:statementId', (req, res) => {
         throw err;
       }
       res.json( dbToObject(numPosts) );
+      mongoose.connection.close();
     });
   });
 });
@@ -179,6 +189,7 @@ server.get('/ratings/post/:postId', (req, res) => {
         throw err;
       }
       res.json(ratings);
+      mongoose.connection.close();
     });
   });
 });
@@ -190,6 +201,7 @@ server.get('/ratings/statement/:statementId', (req, res) => {
         throw err;
       }
       res.json(ratings);
+      mongoose.connection.close();
     });
   });
 });
@@ -208,6 +220,7 @@ server.get('/user/:userId', (req, res) => {
         throw err;
       }
       res.json(user);
+      mongoose.connection.close();
     });
   });
 });
@@ -215,5 +228,5 @@ server.get('/user/:userId', (req, res) => {
 //----------------------------------   SERVER LISTEN   ------------------------------------------//
 
 server.listen(8083, () => {
-	console.info('listening on port 8083');
+	console.info('API server listening on port 8083');
 });

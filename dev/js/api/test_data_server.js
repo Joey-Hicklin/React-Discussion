@@ -356,7 +356,7 @@ server.get('/build/ratings', (req, res) => {
         for (var i = users.length - 1; i >= 0; i--) {
           let user = users[i]._id;
           let rated = [];
-          for (var j = 300 - 1; j >= 0; j--) {
+          for (var j = 600 - 1; j >= 0; j--) {
             let ratedStatement = statements[getRandomInt(0,statements.length)]._id;
             if(!rated.includes(ratedStatement)){
               let rateSide = getRandomInt(0,3);
