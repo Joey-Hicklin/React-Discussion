@@ -1,19 +1,33 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 
 export default class topic extends Component{
 // TODO replace class with variable testing if active
 
 	render(){
+		const {topicSwitchClasses, topicSwitchText, rootContent, content, chevronL, chevronR, linkChevronL, linkChevronR} = this.props;
+
 		return(
 			<div className="topicWrapper xCenter">
-				<div className="activeTopic">{/* boolean testing current date, latest date_discussed, and expiration */}
-					Active
-				</div>
+				<Link to='/'>
+					<div className={topicSwitchClasses}>{/* boolean testing current date, latest date_discussed, and expiration */}
+						{topicSwitchText}
+					</div>
+				</Link>
 				<div className="topicContent">
-					{this.props.content}{/* content from /topic response */}
+					<Link to={rootContent}>
+						{content}
+					</Link>
+					
+					<Link to={linkChevronL}>
+						<i className={"fa fa-chevron-left chevron " + chevronL}></i>{/* boolean testing if another topic has been discussed earlier */}
+					</Link>
+
+					<Link to={linkChevronR}>
+						<i className={"fa fa-chevron-right chevron " + chevronR}></i>{/* boolean testing expiration */}
+					</Link>
 				</div>
-				<i className="fa fa-chevron-left chevron"></i>{/* boolean testing if another topic has been discussed earlier */}
-				<i className="fa fa-chevron-right chevron"></i>{/* boolean testing expiration */}
+				{this.props.children}
 			</div>
 		)
 	}

@@ -8,16 +8,18 @@ class bigButtons extends Component{
 
 	componentWillMount() {
 		this.buttons = (params, location) => {
-			const { topLinkTo, middleLinkTo, bottomLinkTo, topClasses, middleClasses, bottomClasses, topText, middleText, bottomText, topTextSpan, middleTextSpan, bottomTextSpan } = this.props;
-			if(typeof params.focusPath === 'undefined'){
+			const { topLinkTo, middleLinkTo, bottomLinkTo, topClasses, middleClasses, bottomClasses, topText, middleText, bottomText, topTextSpan, middleTextSpan, bottomTextSpan, spanClasses } = this.props;
+			if(location.pathname.indexOf("read") === -1 && location.pathname.indexOf("speak") === -1){
 				return (
 					<div className="bigButtonWrapper xCenter">
 						<BigButton 
+						spanClasses = {spanClasses}
 						linkTo={topLinkTo}
 						classes={topClasses}
 						text={topText}
 						/>
 						<BigButton 
+						spanClasses = {spanClasses}
 						linkTo={middleLinkTo}
 						classes={middleClasses}
 						text={middleText}
@@ -29,18 +31,21 @@ class bigButtons extends Component{
 				return (
 					<div className="bigButtonWrapper xCenter">
 						<BigButton 
+						spanClasses={spanClasses}
 						linkTo={topLinkTo}
 						classes={topClasses}
 						text={topText}
 						textSpan={topTextSpan}
 						/>
 						<BigButton 
+						spanClasses={spanClasses}
 						linkTo={middleLinkTo}
 						classes={middleClasses}
 						text={middleText}
 						textSpan={middleTextSpan}
 						/>
 						<BigButton 
+						spanClasses={spanClasses}
 						linkTo={bottomLinkTo}
 						classes={bottomClasses}
 						text={bottomText}
@@ -55,7 +60,12 @@ class bigButtons extends Component{
 	}
 
 	render(){
-		return this.buttons(this.props.params, this.props.location)
+		return (
+			<div className="buttonTitle">
+				{this.props.titleText}
+				{this.buttons(this.props.params, this.props.location)}
+			</div>
+		)
 	}
 }
 

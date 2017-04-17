@@ -7,7 +7,7 @@ import RootLayout from './layouts/root_layout';
 
 export default (
   <Router history={browserHistory}>
-		<Route path="/(:focusPath)" component={RootLayout} >
+		<Route path="/(:focusPath)(/:initAction)" component={RootLayout} >
 			<Route path="read" component={RootLayout} />
 			<Route path="speak" component={RootLayout} />
 		</Route>

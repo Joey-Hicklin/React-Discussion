@@ -6,8 +6,9 @@ import Hamburger from '../containers/hamburger_c';
 
 const rootLayout = ({ params, location }) => (
 	<Hamburger>
-		<FocusContent params={params} location={location} />
-		<BigButtons params={params} location={location} />
+		<FocusContent params={params} location={location}>
+			<BigButtons params={params} location={location} />
+		</FocusContent>
 	</Hamburger>
 );
 

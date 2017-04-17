@@ -10,8 +10,14 @@
   .topicWrapper .activeTopic {
     color: red;
     font-size: 2vw; }
+  .topicWrapper .inactiveTopic {
+    color: rgba(100, 100, 100, 0.7);
+    font-size: 2vw; }
   .topicWrapper .topicContent {
-    font-size: 5vw; }
+    font-size: 5vw;
+    position: relative; }
+    .topicWrapper .topicContent a, .topicWrapper .topicContent a:focus, .topicWrapper .topicContent a:visited, .topicWrapper .topicContent a:hover, .topicWrapper .topicContent a:active {
+      color: black; }
 
 .topicTop {
   position: relative;
@@ -32,17 +38,70 @@
 .bigButtonWrapper {
   width: 20vw;
   position: relative;
-  top: 10vw; }
+  top: 0.5vw; }
   .bigButtonWrapper .speechesButton {
     background-color: blue; }
   .bigButtonWrapper .speakButton {
     background-color: green; }
+  .bigButtonWrapper a {
+    text-decoration: none; }
 
 .bigButton {
   width: 20vw;
   height: 4vw;
   margin-bottom: 2vw;
-  font-size: 2.5vw; }
+  font-size: 2.5vw;
+  border: none;
+  border-radius: 0.3vw; }
+
+.bigButton:focus {
+  outline: none; }
+
+.buttonTitle {
+  position: relative;
+  top: 3vw; }
+  .buttonTitle span {
+    font-size: 1.5vw;
+    position: absolute;
+    right: -1vw;
+    background-color: red;
+    color: white;
+    border-radius: 3vw;
+    padding: 0.5vw; }
+  .buttonTitle .inactive {
+    display: none; }
+
+.topRoot {
+  background-color: rgba(0, 0, 255, 0.6);
+  color: white; }
+
+.middleRoot {
+  background-color: #008200;
+  color: white; }
+
+.topRead {
+  background-color: rgba(0, 255, 0, 0.4);
+  color: black; }
+
+.middleRead {
+  background-color: rgba(0, 0, 255, 0.4);
+  color: black; }
+
+.bottomRead {
+  background-color: rgba(255, 0, 0, 0.4);
+  color: black; }
+
+.topSpeak {
+  background-color: rgba(0, 255, 0, 0.7);
+  color: black; }
+
+.middleSpeak {
+  background-color: rgba(0, 0, 255, 0.7);
+  color: black; }
+
+.bottomSpeak {
+  background-color: rgba(255, 0, 0, 0.7);
+  color: black; }
 
 body {
   margin: 0; }
@@ -54,6 +113,12 @@ body {
 #app {
   width: 100%;
   height: 100%; }
+
+.inactive {
+  display: none; }
+
+a {
+  text-decoration: none; }
 
 .fa-bars {
   font-size: 2vw;

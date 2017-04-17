@@ -81,51 +81,57 @@ server.get('/topic/t/:shortID', (req, res) => {
 
 server.get('/posts/t/:topicId', (req, res) => {
   connectToDb(mongoose).then( (db) => {
-    Post.getNumMainPosts( req.params.topicId, (err, numMainPosts) => {
+    Post.getMainPosts( req.params.topicId, req.query, (err, numMainPosts) => {
       if(err){
         throw err;
       }
-      res.json( dbToObject(numMainPosts) );
+      console.info("Server", req.query);
+      if(Object.keys(req.query).length === 0){
+        res.json( dbToObject(numMainPosts) );
+      }else{
+        res.json(req.query);
+      }
+      
       mongoose.connection.close();
     });
   });
 });
 
-server.get('/posts/t/:topicId/agree', (req, res) => {
-  connectToDb(mongoose).then( (db) => {
-    Post.getMainPosts( 0, req.params.topicId, (err, posts) => {
-      if(err){
-        throw err;
-      }
-      res.json(posts);
-      mongoose.connection.close();
-    });
-  });
-});
+// server.get('/posts/t/:topicId/agree', (req, res) => {
+//   connectToDb(mongoose).then( (db) => {
+//     Post.getMainPosts( 0, req.params.topicId, (err, posts) => {
+//       if(err){
+//         throw err;
+//       }
+//       res.json(posts);
+//       mongoose.connection.close();
+//     });
+//   });
+// });
 
-server.get('/posts/t/:topicId/neutral', (req, res) => {
-  connectToDb(mongoose).then( (db) => {
-    Post.getMainPosts( 1, req.params.topicId, (err, posts) => {
-      if(err){
-        throw err;
-      }
-      res.json(posts);
-      mongoose.connection.close();
-    });
-  });
-});
+// server.get('/posts/t/:topicId/neutral', (req, res) => {
+//   connectToDb(mongoose).then( (db) => {
+//     Post.getMainPosts( 1, req.params.topicId, (err, posts) => {
+//       if(err){
+//         throw err;
+//       }
+//       res.json(posts);
+//       mongoose.connection.close();
+//     });
+//   });
+// });
 
-server.get('/posts/t/:topicId/disagree', (req, res) => {
-  connectToDb(mongoose).then( (db) => {
-    Post.getMainPosts( 2, req.params.topicId, (err, posts) => {
-      if(err){
-        throw err;
-      }
-      res.json(posts);
-      mongoose.connection.close();
-    });
-  });
-});
+// server.get('/posts/t/:topicId/disagree', (req, res) => {
+//   connectToDb(mongoose).then( (db) => {
+//     Post.getMainPosts( 2, req.params.topicId, (err, posts) => {
+//       if(err){
+//         throw err;
+//       }
+//       res.json(posts);
+//       mongoose.connection.close();
+//     });
+//   });
+// });
 
 server.get('/posts/:statementId/agree', (req, res) => {
   connectToDb(mongoose).then( (db) => {

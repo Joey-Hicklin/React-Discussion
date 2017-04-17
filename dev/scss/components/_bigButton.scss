@@ -1,13 +1,17 @@
 .bigButtonWrapper{
 	width: 20vw;
 	position: relative;
-	top: 10vw;
+	top: 0.5vw;
 
 	.speechesButton{
 		background-color: blue;
 	}
 	.speakButton{
 		background-color: green;
+	}
+
+	a{
+		text-decoration: none;
 	}
 }
 
@@ -16,4 +20,68 @@
 	height: 4vw;
 	margin-bottom: 2vw;
 	font-size: 2.5vw;
+	border: none;
+	border-radius: 0.3vw;
+}
+.bigButton:focus{
+	outline: none;
+}
+
+.buttonTitle{
+	position: relative;
+	top: 3vw;
+
+	span{
+		font-size: 1.5vw;
+		position: absolute;
+		right: -1vw;
+		background-color: red;
+		color: white;
+		border-radius: 3vw;
+		padding: 0.5vw;
+	}
+
+	.inactive{
+		display:none;
+	}
+}
+
+.topRoot{
+	background-color: rgba(0,0,255,0.6);
+	color: white;
+}
+
+.middleRoot{
+	background-color: rgba(0,130,0,1);
+	color: white;
+}
+
+.topRead{
+	background-color: rgba(0,255,0,0.4);
+	color: black;
+}
+
+.middleRead{
+	background-color: rgba(0,0,255,0.4);
+	color: black;
+}
+
+.bottomRead{
+	background-color: rgba(255,0,0,0.4);
+	color: black;
+}
+
+.topSpeak{
+	background-color: rgba(0,255,0,0.7);
+	color: black;
+}
+
+.middleSpeak{
+	background-color: rgba(0,0,255,0.7);
+	color: black;
+}
+
+.bottomSpeak{
+	background-color: rgba(255,0,0,0.7);
+	color: black;
 }

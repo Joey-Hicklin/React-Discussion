@@ -14,23 +14,7 @@ import BigButtons from '../presentationals/big_buttons_p';
 class SmartBigButtons extends Component{
 
 	componentWillMount() {
-		const {params, location} = this.props;
-
-		this.sortedFocusPath = () => {
-			//if location is root or not select or view
-			if(location.pathname === '/' || location.pathname){
-
-				if(typeof params.focusPath === 'undefined'){
-					return this.props.mainID;
-
-				}else if(params.focusPath.length <= 6){
-					return location.pathname;
-
-				}else{
-					return location.pathname;
-				}
-			}
-		}
+		
 	}
 
 	componentWillReceiveProps(nextProps, nextState) {
@@ -45,18 +29,20 @@ class SmartBigButtons extends Component{
 	render(){
 		const {...rest} = this.props;
 		const {params, location} = this.props;
+		const ID = typeof params.focusPath === 'undefined' ? this.props.mainID : params.focusPath;
 
-			if(typeof params.focusPath === 'undefined'){
+			if(location.pathname.indexOf("read") === -1 && location.pathname.indexOf("speak") === -1){
 				return (
 					<BigButtons
 					{...rest}
-					topLinkTo = {this.props.mainID + "/read"}
-					topClasses = ""
+					titleText = ""
+					spanClasses = "inactive"
+					topLinkTo = {ID + "/read"}
+					topClasses = "topRoot"
 					topText = "Read"
-					middleLinkTo = {this.props.mainID + "/speak"}
-					middleClasses = ""
+					middleLinkTo = {ID + "/speak"}
+					middleClasses = {location.pathname === "/" || params.focusPath === this.props.mainID ? "middleRoot" : "inactive"}
 					middleText = "Speak"
-					sortedFocusPath = {this.sortedFocusPath()}
 					/>
 				)
 
@@ -66,35 +52,36 @@ class SmartBigButtons extends Component{
 					return(
 						<BigButtons
 						{...rest}
-						topLinkTo = {"/" + this.props.mainID + "/read/agree"}
-						topClasses = ""
+						titleText = "Show me responses that [are]..."
+						topLinkTo = {"/" + ID + "/read/agree"}
+						topClasses = "topRead"
 						topText = "Agree"
 						topTextSpan = {this.props.agreeNum}
-						middleLinkTo = {"/" + this.props.mainID + "/read/neutral"}
-						middleClasses = ""
+						middleLinkTo = {"/" + ID + "/read/neutral"}
+						middleClasses = "middleRead"
 						middleText = "Neutral"
 						middleTextSpan = {this.props.neutralNum}
-						bottomLinkTo = {"/" + this.props.mainID + "/read/disagree"}
-						bottomClasses = ""
+						bottomLinkTo = {"/" + ID + "/read/disagree"}
+						bottomClasses = "bottomRead"
 						bottomText = "Disagree"
 						bottomTextSpan = {this.props.disagreeNum}
-						sortedFocusPath = {this.sortedFocusPath()}
 						/>
 					)
 				}else if(location.pathname.indexOf('speak') !== -1){
 					return(
 						<BigButtons
 						{...rest}
-						topLinkTo = {"/" + this.props.mainID + "/speak/agree"}
-						topClasses = ""
+						spanClasses = "inactive"
+						titleText = "I'm responding in..."
+						topLinkTo = {"/" + ID + "/speak/agree"}
+						topClasses = "topSpeak"
 						topText = "Agreement"
-						middleLinkTo = {"/" + this.props.mainID + "/speak/neutral"}
-						middleClasses = ""
+						middleLinkTo = {"/" + ID + "/speak/neutral"}
+						middleClasses = "middleSpeak"
 						middleText = "Neutrality"
-						bottomLinkTo = {"/" + this.props.mainID + "/speak/disagree"}
-						bottomClasses = ""
+						bottomLinkTo = {"/" + ID + "/speak/disagree"}
+						bottomClasses = "bottomSpeak"
 						bottomText = "Disagreement"
-						sortedFocusPath = {this.sortedFocusPath()}
 						/>
 					)
 				}
@@ -110,11 +97,7 @@ class SmartBigButtons extends Component{
 			}
 		return (
 			<BigButtons
-			{...rest}
-
-			sortedFocusPath = {this.sortedFocusPath()}
-
-
+				{...rest}
 			/>
 		)
 	}
@@ -129,10 +112,10 @@ const mapStateToProps = (state, { params }) => {
 	if(location.pathname.indexOf('read') !== -1){
 		const focusPath = state.topics[params.focusPath];
 		const mapRead = {
-			agreeNum: typeof focusPath === 'undefined' ? "" : typeof focusPath.postNum === 'undefined' ? "" : focusPath.postNum.agree,
-			neutralNum: typeof focusPath === 'undefined' ? "" : typeof focusPath.postNum === 'undefined' ? "" : focusPath.postNum.neutral,
-			disagreeNum: typeof focusPath === 'undefined' ? "" : typeof focusPath.postNum === 'undefined' ? "" : focusPath.postNum.disagree,
-			topicID: Object.keys(state.topics).length === 0 ? '0' : focusPath._id
+			agreeNum: typeof focusPath === 'undefined' ? "0" : typeof focusPath.postNum === 'undefined' ? "0" : focusPath.postNum.agree,
+			neutralNum: typeof focusPath === 'undefined' ? "0" : typeof focusPath.postNum === 'undefined' ? "0" : focusPath.postNum.neutral,
+			disagreeNum: typeof focusPath === 'undefined' ? "0" : typeof focusPath.postNum === 'undefined' ? "0" : focusPath.postNum.disagree,
+			topicID: Object.keys(state.topics).length === 0 || typeof focusPath === 'undefined' ? '0' : focusPath._id
 		};
 		mapCombo = Object.assign({}, {...mapRoot, ...mapRead});
 	}else{

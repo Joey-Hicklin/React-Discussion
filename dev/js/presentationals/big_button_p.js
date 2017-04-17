@@ -8,8 +8,9 @@ class bigButton extends Component{
 		return(
 			<Link to={this.props.linkTo}>
 				<button className={this.props.classes + " bigButton"}>
-					{this.props.text}<span>{this.props.textSpan}</span>
+					{this.props.text}
 				</button>
+				<span className={this.props.spanClasses}>{this.props.textSpan}</span>
 			</Link>
 		)
 	}

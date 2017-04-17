@@ -1,5 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import moment from 'moment';
+
 import Name from './database/schemas/names';
 import User from './database/schemas/users';
 import Topic from './database/schemas/topics';
@@ -8,7 +10,8 @@ import Statement from './database/schemas/statements';
 import Rating from './database/schemas/ratings';
 import names from './database/test_data/names';
 import sIpsum from './database/test_data/statement_ipsum';
-import moment from 'moment';
+
+import {toBase} from '../functions';
 
 
 const date = Date.now();
@@ -20,23 +23,7 @@ weekStart = weekStart.setHours(0,0,0,0);
 const endDate = new Date(date-7*24*60*60*1000);
 const weekEnd = new Date((weekStart+7*24*60*60*1000)-1);
 
-Number.prototype.toBase = function (base) {
-    var symbols = 
-    "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-    var decimal = this;
-    var conversion = "";
-
-    if (base > symbols.length || base <= 1) {
-        return false;
-    }
-
-    while (decimal >= 1) {
-        conversion = symbols[(decimal - (base * Math.floor(decimal / base)))] + conversion;
-        decimal = Math.floor(decimal / base);
-    }
-
-    return (base < 11) ? parseInt(conversion) : conversion;
-}
+Number.prototype.toBase = toBase;
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
