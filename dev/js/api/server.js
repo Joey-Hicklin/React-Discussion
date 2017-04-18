@@ -81,17 +81,17 @@ server.get('/topic/t/:shortID', (req, res) => {
 
 server.get('/posts/t/:topicId', (req, res) => {
   connectToDb(mongoose).then( (db) => {
-    Post.getMainPosts( req.params.topicId, req.query, (err, numMainPosts) => {
+    Post.getMainPosts( req.params.topicId, req.query, (err, DbResponse) => {
       if(err){
         throw err;
       }
-      console.info("Server", req.query);
-      if(Object.keys(req.query).length === 0){
-        res.json( dbToObject(numMainPosts) );
-      }else{
-        res.json(req.query);
-      }
-      
+      if(Object.keys(req.query).length === 0 || (req.query.style < 3 && req.query.sort < 11 && req.query.day < 7 && req.query.time < 24)){
+        if(Object.keys(req.query).length === 0){
+          res.json( dbToObject(DbResponse) );
+        }else{
+          res.json(DbResponse);
+        }
+      }      
       mongoose.connection.close();
     });
   });
