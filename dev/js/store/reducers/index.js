@@ -4,12 +4,14 @@ import { loggedIn } from "./logged_in_r";
 import topic from "./topic_r";
 import { topics } from "./topics_r";
 import { user } from "./user_r";
+import { posts } from "./posts_r";
 
 const allReducers = combineReducers({
-	loggedIn: loggedIn,
-	topics: topics,
+	loggedIn,
+	topics,
 	topic: topic(),
-	user: user
+	user,
+	posts
 });
 
 export default allReducers;

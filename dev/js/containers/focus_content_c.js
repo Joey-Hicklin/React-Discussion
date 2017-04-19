@@ -16,50 +16,19 @@ import { fromShortID, toBase } from '../functions';
 
 class SmartFocusContent extends Component{
 
-	componentWillMount() {
-		const {params, location} = typeof this.props.params === 'undefined' ? nextProps : this.props;
-
-		if(location.pathname === "/"){
-			// TODO check state and local storage first
-			this.props.fetchDataByDate("");
-
-		}else if(params.focusPath.length < 7){
-			this.props.fetchDataByShortID(params.focusPath, location.pathname);
-		}else if(params.focusPath.length < 25){
-			console.log('FetchByStatementID');
-		}else{ // TODO else Catch
-			console.log("Whaddaya doin?!");
-		}
-	}
-
-	componentWillReceiveProps(nextProps) {
-		const {params, location, fetchDataByDate, fetchDataByShortID} = nextProps;
-
-		if(location.pathname === "/"){
-			// TODO check state and local storage first
-			fetchDataByDate("");
-
-		}else if(params.focusPath.length < 7){
-			fetchDataByShortID(params.focusPath, location.pathname);
-		}else if(params.focusPath.length < 25){
-			console.log('FetchByStatementID');
-		}else{ // TODO else Catch
-			console.log("Whaddaya doin?!");
-		}
-	}
-
 	render(){
 		const {params, location} = this.props;
 		const {...rest} = this.props;
+		const initAction = location.pathname.split('/')[2];
 
 		const shortID = typeof params.focusPath === 'undefined' ? this.props.getMainShortID : params.focusPath;
 		const prevShortID = toBase(62, (fromShortID(shortID) -1));
 		const nextShortID = toBase(62, (fromShortID(shortID) +1));
-		const prevChevron = typeof params.initAction === 'undefined' ? prevShortID : prevShortID + '/' + params.initAction;
-		const nextChevron = typeof params.initAction === 'undefined' ? nextShortID : nextShortID + '/' + params.initAction;
+		const prevChevron = typeof initAction === 'undefined' ? prevShortID : prevShortID + '/' + initAction;
+		const nextChevron = typeof initAction === 'undefined' ? nextShortID : nextShortID + '/' + initAction;
 
 		if(location.pathname === "/" || params.focusPath === this.props.getMainShortID){
-			if(typeof params.initAction === 'undefined' || params.initAction === 'read'){
+			if(typeof initAction === 'undefined' || initAction === 'read'){
 				return (
 					<FocusContent
 						{...rest}
@@ -83,7 +52,7 @@ class SmartFocusContent extends Component{
 				)
 			}
 		}else if(params.focusPath.length < 7){
-			if(typeof params.initAction === 'undefined' || params.initAction === 'read'){
+			if(typeof initAction === 'undefined' || initAction === 'read'){
 				return(
 					<FocusContent
 						{...rest}
@@ -95,7 +64,6 @@ class SmartFocusContent extends Component{
 					/>
 				)
 			}else{
-				console.log('correct');
 				return(
 					<FocusContent
 						{...rest}

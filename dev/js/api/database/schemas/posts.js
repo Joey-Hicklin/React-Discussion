@@ -9,7 +9,7 @@ var buildPostsSchema = new Schema({
     date_posted : Date,
     response_statement : {
       type : Schema.ObjectId,
-      ref : "statements"
+      ref : "posts.statements"
     },
     response_main : {
       type : Schema.ObjectId,
@@ -20,8 +20,37 @@ var buildPostsSchema = new Schema({
     overall_rating : Number,
     statements : [
       {
-        type : Schema.ObjectId,
-        ref : "statements"
+        _id : mongoose.Types.ObjectId(),
+        order: Number,
+        content : String,
+        current_edit: Boolean,
+        edit_num: Number,
+        ratings: {
+          WS: [
+            {
+              user : {
+                type : Schema.ObjectId,
+                ref : "users"
+              }
+            }
+          ],
+          NH: [
+            {
+              user : {
+                type : Schema.ObjectId,
+                ref : "users"
+              }
+            }
+          ],
+          RI: [
+            {
+              user : {
+                type : Schema.ObjectId,
+                ref : "users"
+              }
+            }
+          ]
+        }
       }
     ]
 });

@@ -37,10 +37,10 @@ class SmartBigButtons extends Component{
 					{...rest}
 					titleText = ""
 					spanClasses = "inactive"
-					topLinkTo = {ID + "/read"}
+					topLinkTo = {"/" + ID + "/read"}
 					topClasses = "topRoot"
 					topText = "Read"
-					middleLinkTo = {ID + "/speak"}
+					middleLinkTo = {"/" + ID + "/speak"}
 					middleClasses = {location.pathname === "/" || params.focusPath === this.props.mainID ? "middleRoot" : "inactive"}
 					middleText = "Speak"
 					/>
@@ -53,15 +53,15 @@ class SmartBigButtons extends Component{
 						<BigButtons
 						{...rest}
 						titleText = "Show me responses that [are]..."
-						topLinkTo = {"/" + ID + "/read/agree"}
+						topLinkTo = {"/" + ID + "/reader?style=0&sort=0&day=1&time=0"}
 						topClasses = "topRead"
 						topText = "Agree"
 						topTextSpan = {this.props.agreeNum}
-						middleLinkTo = {"/" + ID + "/read/neutral"}
+						middleLinkTo = {"/" + ID + "/reader?style=1&sort=0&day=1&time=0"}
 						middleClasses = "middleRead"
 						middleText = "Neutral"
 						middleTextSpan = {this.props.neutralNum}
-						bottomLinkTo = {"/" + ID + "/read/disagree"}
+						bottomLinkTo = {"/" + ID + "/reader?style=2&sort=0&day=1&time=0"}
 						bottomClasses = "bottomRead"
 						bottomText = "Disagree"
 						bottomTextSpan = {this.props.disagreeNum}

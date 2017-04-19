@@ -52,10 +52,25 @@ const topic = () => {
 		}
 	};
 
+	const postIsFetching = (state = false, action) => {
+		switch(action.type) {
+			case 'FETCH_POST':
+				return true;
+				break;
+			case 'RECIEVE_POST':
+				return false;
+				break;
+			default:
+				return state;
+				break;
+		}
+	};
+
 	return combineReducers({
 		main,
 		topicIsFetching,
-		postNumIsFetching
+		postNumIsFetching,
+		postIsFetching
 	});
 };
 
