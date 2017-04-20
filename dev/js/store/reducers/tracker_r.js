@@ -66,11 +66,27 @@ const topic = () => {
 		}
 	};
 
+	const shownPosts = (state = [], action) => {
+		switch(action.type) {
+			case 'RECIEVE_POST':
+				let newState = [];
+				action.payload.forEach( (post) => {
+					newState = newState.concat(post._id);
+				});
+				return state.concat(newState);
+				break;
+			default:
+				return state;
+				break;
+		}
+	}
+
 	return combineReducers({
 		main,
 		topicIsFetching,
 		postNumIsFetching,
-		postIsFetching
+		postIsFetching,
+		shownPosts
 	});
 };
 

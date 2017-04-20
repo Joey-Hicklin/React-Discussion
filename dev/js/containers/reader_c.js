@@ -11,13 +11,13 @@ import Reader from '../presentationals/reader_p';
 class SmartReader extends Component{
 
 	componentWillMount() {
-		const {params, location, fetchPostData, topicID} = this.props;
+		const {params, location, fetchPostData, focusID} = this.props;
 
-		if(topicID !== ''){
+		if(focusID !== ''){
 			if(params.focusPath.length < 7){
-				fetchPostData(true, topicID, location.query);
+				fetchPostData(true, true, focusID, location.query);
 			}else if (params.focusPath.length >= 7 && params.focusPath.length < 25){
-				fetchPostData(false, topicID, location.query);
+				fetchPostData(false, true, focusID, location.query);
 			}else{
 				console.log('Whaddaya doin?!');
 			}
@@ -25,12 +25,12 @@ class SmartReader extends Component{
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const {params, location, fetchPostData, topicID} = nextProps;
+		const {params, location, fetchPostData, focusID} = nextProps;
 
 		if(params.focusPath.length < 7){
-			fetchPostData(true, topicID, location.query);
+			fetchPostData(true, true, focusID, location.query);
 		}else if (params.focusPath.length >= 7 && params.focusPath.length < 25){
-			fetchPostData(false, topicID, location.query);
+			fetchPostData(false, true, focusID, location.query);
 		}else{
 			console.log('Whaddaya doin?!');
 		}
@@ -46,7 +46,7 @@ class SmartReader extends Component{
 
 const mapStateToProps = (state, {params}) => {
 	return{
-		topicID: state.topics[params.focusPath] ? state.topics[params.focusPath]._id : ''
+		focusID: params.focusPath.length > 6 ? params.focusPath : state.topics[params.focusPath] ? state.topics[params.focusPath]._id : ''
 	}
 }
 

@@ -6,8 +6,6 @@ import Name from './database/schemas/names';
 import User from './database/schemas/users';
 import Topic from './database/schemas/topics';
 import Post from './database/schemas/posts';
-import Statement from './database/schemas/statements';
-import Rating from './database/schemas/ratings';
 import names from './database/test_data/names';
 import sIpsum from './database/test_data/statement_ipsum';
 
@@ -206,48 +204,68 @@ server.get('/build/mainposts', (req, res) => {
       User.count({}, (err, c) => {
         User.find({}, '_id', (err, user) => {
 
-          for (var j = c - 1; j >= 0; j--) {
+          for (var j = c-1; j >= 0; j--) {
             let datePosted1 = getRandomInt(weekStart, (weekStart + 5*24*60*59*1000));
             let datePosted2 = getRandomInt((datePosted1 + 2*24*60*60*1000), (weekStart + 7*24*60*60*1000));
 
             for (var i = 1; i <= 2; i++) {
               let responseIn = getRandomInt(0,3);
               let datePosted = i==1 ? datePosted1 : datePosted2;
+              let statementNum = getRandomInt(0,5);
+              let statements = [];
+
+              for (var h = 0; h <= statementNum; h++) {
+                let WS = [];
+                let NH = [];
+                let RI = [];
+
+                for (var g = 0; g < 10; g++) {
+                  let style = getRandomInt(0,3);
+                  let authorNum = getRandomInt(0,(c+1));
+
+                  if(style !== 3){
+                    switch(style){
+                      case 0:
+                        WS.push({user: user[authorNum]});
+                        break;
+                      case 1:
+                        NH.push({user: user[authorNum]});
+                        break;
+                      case 2:
+                        RI.push({user: user[authorNum]});
+                        break;
+                      
+                    }
+                  }
+                }
+
+                let content = sIpsum.slice(0, getRandomInt(50,352));
+
+                statements.push({
+                  _id: mongoose.Types.ObjectId(),
+                  order: h,
+                  content,
+                  current_edit: true,
+                  edit_num: 0,
+                  ratings: {
+                    WS,
+                    NH,
+                    RI
+                  }
+                });
+              }
 
               let newMainPost = new Post({
                 author : user[j],
                 date_posted : new Date(datePosted),
                 response_main : topic[0]._id,
                 response_in : responseIn,
-                expiration : weekEnd
+                expiration : weekEnd,
+                overall_rating: 0, //---TODO
+                statements: statements //-----------TODO
               });
               newMainPost.save( (err, newPost) => {
                 if (err) return console.error(err);
-
-                let sNum = getRandomInt(0,5);
-                for (var i = 0; i <= sNum; i++) {
-                  let content = sIpsum.slice(0, getRandomInt(50,352));
-                  let newStatement = new Statement({
-                    content : content,
-                    expiration : weekEnd
-                  });
-                  newStatement.save( (err, statement) => {
-                    if (err) return console.error(err);
-
-                    let newRating = new Rating({
-                      statement: statement._id
-                    });
-                    newRating.save( (err, rating) => {
-                      if (err) return console.error(err);
-
-                      let conditions = { _id : newPost._id };
-                      let update = { $addToSet : { statements : statement._id }};  
-                      Post.findOneAndUpdate(conditions, update, (err, filledPost) => {
-                        if (err) return console.error(err);
-                      });
-                    });
-                  });
-                }
               });
             }
           }
@@ -268,56 +286,79 @@ server.get('/build/mainposts', (req, res) => {
 //-----------------------------------------------------------------------------------------------//
 
 server.get('/build/posts', (req, res) => {
+  weekStart = new Date(weekStart);
 
   connectToDb(mongoose).then( (db) => {
-    User.find({}, '_id', (err, users) => {
+    User.find({}, '_id', (err, user) => {
       if (err) return console.error(err);
 
-      for (var i = 100 - 1; i >= 0; i--) {
-        Statement.find({
-          expiration: weekEnd
-        })
-        .exec( (err, statements) => {
+      for (var i = 20 - 1; i >= 0; i--) {
+
+        Post.find({'date_posted': {$lte: weekEnd, $gte: weekStart}}, (err, posts) => {
           if (err) return console.error(err);
-        
-          for (var i = 40 - 1; i >= 0; i--) {
-            let author = users[getRandomInt(0,users.length)]._id;
-            let thisStatement = statements[getRandomInt(0,statements.length)];
 
-            let newPost = new Post({
-              author : author,
-              date_posted : new Date(getRandomInt(date.valueOf(), endDate.valueOf())), // TODO: alter date to compensate for post time
-              response_statement : thisStatement._id,
-              response_in : getRandomInt(0,3),
-              expiration : weekEnd
-            });
-            newPost.save( (err, post) => {
-              if (err) return console.error(err);
+          for (var j = 20 - 1; j >= 0; j--) {
 
-              let sNum = getRandomInt(0,5);
-              for (var i = 0; i <= sNum; i++) {
-                let content = sIpsum.slice(0, getRandomInt(50,352));
-                let newStatement = new Statement({
-                  content : content,
-                  expiration : weekEnd
-                });
-                newStatement.save( (err, statement) => {
-                  if (err) return console.error(err);
+            const postResponse = posts[getRandomInt(0, (posts.length -1))];
+            const statementResponse = postResponse.statements[getRandomInt(0, (postResponse.statements.length -1))]._id;
+            const responseIn = getRandomInt(0,3);
+            let datePosted = getRandomInt(Date.parse(weekStart), Date.parse(weekEnd));
+            let statementNum = getRandomInt(0,5);
+            let statements = [];
 
-                  let newRating = new Rating({
-                    statement: statement._id
-                  });
-                  newRating.save( (err, rating) => {
-                    if (err) return console.error(err);
+            for (var h = 0; h <= statementNum; h++) {
+              let WS = [];
+              let NH = [];
+              let RI = [];
 
-                    let conditions = { _id : newPost._id };
-                    let update = { $addToSet : { statements : statement._id }};  
-                    Post.findOneAndUpdate(conditions, update, (err, filledPost) => {
-                      if (err) return console.error(err);
-                    });
-                  });
-                });
+              for (var g = 0; g < 10; g++) {
+                let style = getRandomInt(0,3);
+                let authorNum = getRandomInt(0, user.length);
+
+                if(style !== 3){
+                  switch(style){
+                    case 0:
+                      WS.push({user: user[authorNum]});
+                      break;
+                    case 1:
+                      NH.push({user: user[authorNum]});
+                      break;
+                    case 2:
+                      RI.push({user: user[authorNum]});
+                      break;
+                    
+                  }
+                }
               }
+
+              let content = sIpsum.slice(0, getRandomInt(50,352));
+
+              statements.push({
+                _id: mongoose.Types.ObjectId(),
+                order: h,
+                content,
+                current_edit: true,
+                edit_num: 0,
+                ratings: {
+                  WS,
+                  NH,
+                  RI
+                }
+              });
+            }
+
+            let newMainPost = new Post({
+              author : user[getRandomInt(0, user.length)],
+              date_posted : new Date(datePosted),
+              response_post : postResponse._id,
+              response_statement: statementResponse,
+              response_in : responseIn,
+              expiration : weekEnd,
+              overall_rating: 0, //---TODO
+              statements: statements //-----------TODO
+            });
+            newMainPost.save( (err, newPost) => {
+              if (err) return console.error(err);
             });
           }
         });
@@ -335,45 +376,45 @@ server.get('/build/posts', (req, res) => {
 //                                                                                               //
 //-----------------------------------------------------------------------------------------------//
 
-server.get('/build/ratings', (req, res) => {
+// server.get('/build/ratings', (req, res) => {
 
-  connectToDb(mongoose).then( (db) => {
-    User.find({}, '_id', (err, users) => {
-      Statement.find({}, '_id', (err, statements) => {
-        for (var i = users.length - 1; i >= 0; i--) {
-          let user = users[i]._id;
-          let rated = [];
-          for (var j = 600 - 1; j >= 0; j--) {
-            let ratedStatement = statements[getRandomInt(0,statements.length)]._id;
-            if(!rated.includes(ratedStatement)){
-              let rateSide = getRandomInt(0,3);
-              let update = {};
+//   connectToDb(mongoose).then( (db) => {
+//     User.find({}, '_id', (err, users) => {
+//       Statement.find({}, '_id', (err, statements) => {
+//         for (var i = users.length - 1; i >= 0; i--) {
+//           let user = users[i]._id;
+//           let rated = [];
+//           for (var j = 600 - 1; j >= 0; j--) {
+//             let ratedStatement = statements[getRandomInt(0,statements.length)]._id;
+//             if(!rated.includes(ratedStatement)){
+//               let rateSide = getRandomInt(0,3);
+//               let update = {};
 
-              switch(rateSide){
-                case 0:
-                  update = {$push: {WS: {user: user}}};
-                  break;
-                case 1:
-                  update = {$push: {NH: {user: user}}};
-                  break;
-                case 2:
-                  update = {$push: {RI: {user: user}}};
-                  break;
-              }
-              let updateConfig = {safe: true, upsert: true, new : true};
-              Rating.findOneAndUpdate( {statement:ratedStatement}, update, updateConfig, (err, completed) => {
-                if (err) return console.error(err);
-              });
-              rated.push(ratedStatement);
-            }
-          }
-        }
-      });
-    });
-  });
+//               switch(rateSide){
+//                 case 0:
+//                   update = {$push: {WS: {user: user}}};
+//                   break;
+//                 case 1:
+//                   update = {$push: {NH: {user: user}}};
+//                   break;
+//                 case 2:
+//                   update = {$push: {RI: {user: user}}};
+//                   break;
+//               }
+//               let updateConfig = {safe: true, upsert: true, new : true};
+//               Rating.findOneAndUpdate( {statement:ratedStatement}, update, updateConfig, (err, completed) => {
+//                 if (err) return console.error(err);
+//               });
+//               rated.push(ratedStatement);
+//             }
+//           }
+//         }
+//       });
+//     });
+//   });
 
-  res.send('Inserting RATINGS...');
-});
+//   res.send('Inserting RATINGS...');
+// });
 
 //----------------------------------   SERVER LISTEN   ------------------------------------------//
 

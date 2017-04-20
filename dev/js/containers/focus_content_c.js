@@ -89,7 +89,7 @@ class SmartFocusContent extends Component{
 const mapStateToProps = (state, { params }) => {
 	return {
 		content: getContent(state, params.focusPath),
-		getMainShortID: typeof state.topic.main === 'undefined' ? "" : state.topic.main
+		getMainShortID: typeof state.tracker.main === 'undefined' ? "" : state.tracker.main
 	};
 }
 

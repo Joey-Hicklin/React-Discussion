@@ -5,8 +5,6 @@ import Name from './database/schemas/names';
 import User from './database/API_functions/users';
 import Topic from './database/API_functions/topics';
 import Post from './database/API_functions/posts';
-import Statement from './database/schemas/statements';
-import Rating from './database/API_functions/ratings';
 
 
 const getRandomInt = (min, max) => {
@@ -81,7 +79,7 @@ server.get('/topic/t/:shortID', (req, res) => {
 
 server.get('/posts/t/:topicId', (req, res) => {
   connectToDb(mongoose).then( (db) => {
-    Post.getMainPosts( req.params.topicId, req.query, (err, DbResponse) => {
+    Post.getPosts( true, req.params.topicId, req.query, (err, DbResponse) => {
       if(err){
         throw err;
       }
@@ -97,121 +95,23 @@ server.get('/posts/t/:topicId', (req, res) => {
   });
 });
 
-// server.get('/posts/t/:topicId/agree', (req, res) => {
-//   connectToDb(mongoose).then( (db) => {
-//     Post.getMainPosts( 0, req.params.topicId, (err, posts) => {
-//       if(err){
-//         throw err;
-//       }
-//       res.json(posts);
-//       mongoose.connection.close();
-//     });
-//   });
-// });
-
-// server.get('/posts/t/:topicId/neutral', (req, res) => {
-//   connectToDb(mongoose).then( (db) => {
-//     Post.getMainPosts( 1, req.params.topicId, (err, posts) => {
-//       if(err){
-//         throw err;
-//       }
-//       res.json(posts);
-//       mongoose.connection.close();
-//     });
-//   });
-// });
-
-// server.get('/posts/t/:topicId/disagree', (req, res) => {
-//   connectToDb(mongoose).then( (db) => {
-//     Post.getMainPosts( 2, req.params.topicId, (err, posts) => {
-//       if(err){
-//         throw err;
-//       }
-//       res.json(posts);
-//       mongoose.connection.close();
-//     });
-//   });
-// });
-
-server.get('/posts/:statementId/agree', (req, res) => {
-  connectToDb(mongoose).then( (db) => {
-    Post.getPosts( 0, req.params.statementId, (err, posts) => {
-      if(err){
-        throw err;
-      }
-      res.json(posts);
-      mongoose.connection.close();
-    });
-  });
-});
-
-server.get('/posts/:statementId/neutral', (req, res) => {
-  connectToDb(mongoose).then( (db) => {
-    Post.getPosts( 1, req.params.statementId, (err, posts) => {
-      if(err){
-        throw err;
-      }
-      res.json(posts);
-      mongoose.connection.close();
-    });
-  });
-});
-
-server.get('/posts/:statementId/disagree', (req, res) => {
-  connectToDb(mongoose).then( (db) => {
-    Post.getPosts( 2, req.params.statementId, (err, posts) => {
-      if(err){
-        throw err;
-      }
-      res.json(posts);
-      mongoose.connection.close();
-    });
-  });
-});
-
 server.get('/posts/:statementId', (req, res) => {
   connectToDb(mongoose).then( (db) => {
-    Post.getNumPosts( req.params.statementId, (err, numPosts) => {
+    Post.getPosts( false, req.params.statementId, req.query, (err, DbResponse) => {
       if(err){
         throw err;
       }
-      res.json( dbToObject(numPosts) );
+      if(Object.keys(req.query).length === 0 || (req.query.style < 3 && req.query.sort < 11 && req.query.day < 7 && req.query.time < 24)){
+        if(Object.keys(req.query).length === 0){
+          res.json( dbToObject(DbResponse) );
+        }else{
+          res.json(DbResponse);
+        }
+      }      
       mongoose.connection.close();
     });
   });
 });
-
-
-//////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                      //
-//                                      RATINGS                                         //
-//                                                                                      //
-//////////////////////////////////////////////////////////////////////////////////////////
-
-server.get('/ratings/post/:postId', (req, res) => {
-  connectToDb(mongoose).then( (db) => {
-    Rating.getPostRatings( req.params.postId, (err, ratings) => {
-      if(err){
-        throw err;
-      }
-      res.json(ratings);
-      mongoose.connection.close();
-    });
-  });
-});
-
-server.get('/ratings/statement/:statementId', (req, res) => {
-  connectToDb(mongoose).then( (db) => {
-    Rating.getStatementRatings( req.params.statementId, (err, ratings) => {
-      if(err){
-        throw err;
-      }
-      res.json(ratings);
-      mongoose.connection.close();
-    });
-  });
-});
-
 
 //////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //

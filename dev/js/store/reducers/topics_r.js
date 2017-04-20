@@ -42,7 +42,7 @@ export const topics = (state = {}, action) => {
 	}
 }
 
-export const getContent = (state, ID=state.topic.main) => {
+export const getContent = (state, ID=state.tracker.main) => {
 		return (state.topics[ID]) ? state.topics[ID].content : "...Loading"
 };
 

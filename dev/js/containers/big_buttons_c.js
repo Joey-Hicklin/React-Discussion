@@ -17,10 +17,10 @@ class SmartBigButtons extends Component{
 		
 	}
 
-	componentWillReceiveProps(nextProps, nextState) {
+	componentWillReceiveProps(nextProps) {
 
 		if(nextProps.location.pathname.indexOf('read') !== -1){
-			if(nextProps.topicID !== '0'){
+			if(nextProps.topicID !== '0' && !nextProps.postNumIsFetching && nextProps.agreeNum === ''){
 				this.props.fetchPostNumData(nextProps.topicID, true);
 			}
 		}
@@ -29,7 +29,7 @@ class SmartBigButtons extends Component{
 	render(){
 		const {...rest} = this.props;
 		const {params, location} = this.props;
-		const ID = typeof params.focusPath === 'undefined' ? this.props.mainID : params.focusPath;
+		const ID = typeof params.focusPath === 'undefined' ? this.props.main : params.focusPath;
 
 			if(location.pathname.indexOf("read") === -1 && location.pathname.indexOf("speak") === -1){
 				return (
@@ -41,7 +41,7 @@ class SmartBigButtons extends Component{
 					topClasses = "topRoot"
 					topText = "Read"
 					middleLinkTo = {"/" + ID + "/speak"}
-					middleClasses = {location.pathname === "/" || params.focusPath === this.props.mainID ? "middleRoot" : "inactive"}
+					middleClasses = {location.pathname === "/" || params.focusPath === this.props.main ? "middleRoot" : "inactive"}
 					middleText = "Speak"
 					/>
 				)
@@ -104,17 +104,16 @@ class SmartBigButtons extends Component{
 }
 
 const mapStateToProps = (state, { params }) => {
-	const mapRoot = {
-		mainID: state.topic.main
-	};
+	const {...tracker} = state.tracker;
+	const mapRoot = Object.assign({}, {...tracker});
 
 	let mapCombo;
 	if(location.pathname.indexOf('read') !== -1){
 		const focusPath = state.topics[params.focusPath];
 		const mapRead = {
-			agreeNum: typeof focusPath === 'undefined' ? "0" : typeof focusPath.postNum === 'undefined' ? "0" : focusPath.postNum.agree,
-			neutralNum: typeof focusPath === 'undefined' ? "0" : typeof focusPath.postNum === 'undefined' ? "0" : focusPath.postNum.neutral,
-			disagreeNum: typeof focusPath === 'undefined' ? "0" : typeof focusPath.postNum === 'undefined' ? "0" : focusPath.postNum.disagree,
+			agreeNum: typeof focusPath === 'undefined' ? "" : typeof focusPath.postNum === 'undefined' ? "" : focusPath.postNum.agree,
+			neutralNum: typeof focusPath === 'undefined' ? "" : typeof focusPath.postNum === 'undefined' ? "" : focusPath.postNum.neutral,
+			disagreeNum: typeof focusPath === 'undefined' ? "" : typeof focusPath.postNum === 'undefined' ? "" : focusPath.postNum.disagree,
 			topicID: Object.keys(state.topics).length === 0 || typeof focusPath === 'undefined' ? '0' : focusPath._id
 		};
 		mapCombo = Object.assign({}, {...mapRoot, ...mapRead});
