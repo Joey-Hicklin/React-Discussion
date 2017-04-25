@@ -1,0 +1,25 @@
+.searchForm{
+	font-size: 2vw;
+
+	select{
+		font-size: 1.8vw;
+		text-align: center;
+		text-align-last: center;
+		margin: 2.1vw 1vw 0vw 1vw;
+		padding: 0vw 1vw;
+		-webkit-appearance: none;
+    	-moz-appearance: none;
+    	text-indent: 0.1vw;
+
+    	option{
+    		text-align: center;
+    	}
+	}
+	select:first-child{
+		margin-left: 0vw;
+	}
+
+	input{
+		font-size: 1.7vw;
+	}
+}

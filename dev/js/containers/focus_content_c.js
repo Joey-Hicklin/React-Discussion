@@ -16,19 +16,38 @@ import { fromShortID, toBase } from '../functions';
 
 class SmartFocusContent extends Component{
 
+	componentWillReceiveProps(nextProps) {
+		// console.log('focus content props');
+	}
+
 	render(){
-		const {params, location} = this.props;
+		const {params, location, getMainShortID} = this.props;
+		const {focusPath} = params;
 		const {...rest} = this.props;
+
 		const initAction = location.pathname.split('/')[2];
 
-		const shortID = typeof params.focusPath === 'undefined' ? this.props.getMainShortID : params.focusPath;
+		const shortID =
+			focusPath ? focusPath
+			: getMainShortID;
+
 		const prevShortID = toBase(62, (fromShortID(shortID) -1));
 		const nextShortID = toBase(62, (fromShortID(shortID) +1));
-		const prevChevron = typeof initAction === 'undefined' ? prevShortID : prevShortID + '/' + initAction;
-		const nextChevron = typeof initAction === 'undefined' ? nextShortID : nextShortID + '/' + initAction;
 
-		if(location.pathname === "/" || params.focusPath === this.props.getMainShortID){
-			if(typeof initAction === 'undefined' || initAction === 'read'){
+		// const postID =
+		// 	focusPath ? focusPath.slice(0, -1)
+		// 	: '';
+
+		const prevChevron =
+			!initAction ? prevShortID
+			: prevShortID + '/' + initAction;
+
+		const nextChevron =
+			!initAction ? nextShortID
+			: nextShortID + '/' + initAction;
+
+		if(location.pathname === "/" || focusPath === getMainShortID){
+			if(!initAction || initAction === 'read'){
 				return (
 					<FocusContent
 						{...rest}
@@ -51,8 +70,8 @@ class SmartFocusContent extends Component{
 					/>
 				)
 			}
-		}else if(params.focusPath.length < 7){
-			if(typeof initAction === 'undefined' || initAction === 'read'){
+		}else if(focusPath.length < 7){
+			if(!initAction || initAction === 'read'){
 				return(
 					<FocusContent
 						{...rest}
@@ -76,10 +95,13 @@ class SmartFocusContent extends Component{
 				)
 			}
 		}else{
-			console.log("Statement Content");
 			return (
 				<FocusContent 
 					{...rest}
+					rootContent={'/' + shortID}
+					topicSwitchClasses="inactive"
+					chevronL='inactive'
+					chevronR='inactive'
 				/>
 			)
 		}
@@ -87,9 +109,14 @@ class SmartFocusContent extends Component{
 }
 
 const mapStateToProps = (state, { params }) => {
+	const {focusPath} = params;
+
+	const isTopic =
+		!focusPath || focusPath.length < 7 ? true : false;
+
 	return {
-		content: getContent(state, params.focusPath),
-		getMainShortID: typeof state.tracker.main === 'undefined' ? "" : state.tracker.main
+		content: getContent(state, focusPath, isTopic),
+		getMainShortID: !state.tracker.main ? "" : state.tracker.main
 	};
 }
 

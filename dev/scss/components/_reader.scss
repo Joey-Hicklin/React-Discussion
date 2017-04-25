@@ -1,0 +1,13 @@
+.readerWrapper{
+	padding: 2vw;
+
+	.agree{
+		background-color: rgba(0,255,0,0.4);
+	}
+	.neutral{
+		background-color: rgba(0,0,255,0.4);
+	}
+	.disagree{
+		background-color: rgba(255,0,0,0.4);
+	}
+}

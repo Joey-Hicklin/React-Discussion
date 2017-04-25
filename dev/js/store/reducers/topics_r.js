@@ -15,24 +15,25 @@ export const topics = (state = {}, action) => {
 				break;
 
 			case 'RECIEVE_POST_NUM':
-				if(action.payload.topic === true){
-					let topic_shortID = filterObject(state, '_id', action.payload.id);
+				const {post, id, data} = action.payload;
+
+				if(post === false){
+					let topic_shortID = filterObject(state, '_id', id);
 					let { ...rest } = state[topic_shortID.name];
 					return Object.assign({}, state, {
 						[topic_shortID.name]: { ...rest,
 							postNum: {
-								agree: action.payload.data.agree,
-								neutral: action.payload.data.neutral,
-								disagree: action.payload.data.disagree
+								agree: data.agree,
+								neutral: data.neutral,
+								disagree: data.disagree
 							}
 						}
 					});
 				}else{
-					// insert postNum data into Statement with key === ID
 					return state;
 				}
-				
 				break;
+
 			default:
 				return state;
 				break;
@@ -42,8 +43,13 @@ export const topics = (state = {}, action) => {
 	}
 }
 
-export const getContent = (state, ID=state.tracker.main) => {
-		return (state.topics[ID]) ? state.topics[ID].content : "...Loading"
+export const getContent = (state, ID=state.tracker.main, topic = true) => {
+		return (
+			topic === true ? state.topics[ID] ? state.topics[ID].content
+				: '...Loading'
+			: state.posts[ID.slice(0, -1)] ? state.posts[ID.slice(0, -1)].statements[ID.slice(-1)].content
+				: '...Loading'
+		)
 };
 
 export const getTopicID = (state, shortID) => {

@@ -9,6 +9,7 @@ class bigButtons extends Component{
 	componentWillMount() {
 		this.buttons = (params, location) => {
 			const { topLinkTo, middleLinkTo, bottomLinkTo, topClasses, middleClasses, bottomClasses, topText, middleText, bottomText, topTextSpan, middleTextSpan, bottomTextSpan, spanClasses } = this.props;
+			
 			if(location.pathname.indexOf("read") === -1 && location.pathname.indexOf("speak") === -1){
 				return (
 					<div className="bigButtonWrapper xCenter">

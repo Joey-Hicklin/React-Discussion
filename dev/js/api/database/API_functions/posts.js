@@ -31,30 +31,43 @@ module.exports.getPosts = (topic, topicId, params={}, callback) => {
 		], callback);
 
 	}else{
-		const style = typeof params.style === 'undefined' ? "" : params.style;
-		let sort = typeof params.sort === 'undefined' ? "" : params.sort;
-		const day = typeof params.day === 'undefined' ? "" : params.day;
-		const time = typeof params.time === 'undefined' ? "" : params.time;
-		let dateTime = moment().day(day === '0' ? 7 : day).hour(time).toDate();
+		const {style, sort, day, time} = params;
+
+		let Sort;
+
+		// TODO debug day adjustment so it will work for previous dates
+
+		const Day =
+			moment().day() !== 0 ? day === '0' ? 7
+				: day
+			: day === '0' ? day
+			: parseInt(day) - 7;
+
+		// monday ===  -6  but should be  1
+		// tuesday ===  -5  but should be  2
+		// wednesday ===  -4  but should be  3
+		/// thursday ===  -3  but should be  4
+		// friday ===  -2  but should be  5
+		// saturday ===  -1  but should be  6
+		const dateTime = moment().day(Day).hour(time).toDate();
+		console.log(dateTime);
 
 		switch(sort){
 			case "0":
-				sort = '-date_posted';
+				Sort = '-date_posted';
 				break;
 			case "1":
-				sort = 'date_posted';
+				Sort = 'date_posted';
 				break;
 			
 		}
-		query = Object.assign({}, query, {
+		const postsQuery = Object.assign({}, query, {
 			'response_in': style,
 			'date_posted': {$gte: dateTime}
 		});
 
-		console.dir(query);
-
-		Post.find(query)
-		.sort(sort)
+		Post.find(postsQuery)
+		.sort(Sort)
 		.exec(callback);
 	}
 }

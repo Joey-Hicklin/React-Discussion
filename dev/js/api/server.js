@@ -56,16 +56,29 @@ server.get('/topic/:date?', (req, res) => {
   });
 });
 
-server.get('/topic/t/:shortID', (req, res) => {
+server.get('/topic/:flag/:ID', (req, res) => {
 
   connectToDb(mongoose).then( (db) => {
-    Topic.getTopicByShortID( (err, topic) => {
-      if(err){
-        throw err;
-      }
-      res.json(topic);
-      mongoose.connection.close();
-    }, req.params.shortID);
+    if(req.params.flag === 't'){
+      Topic.getTopicByShortID( (err, topic) => {
+        if(err){
+          throw err;
+        }
+        res.json(topic);
+        mongoose.connection.close();
+      }, req.params.ID);
+    }else if(req.params.flag === 'p'){
+      Topic.getPostByID( (err, post) => {
+        if(err){
+          throw err;
+        }
+        res.json(post);
+        mongoose.connection.close();
+      }, req.params.ID);
+    }else{ // TODO send error code
+      res.send('<p>Invalid API endpoint. After \'/topic\' you must include either a \'/p/\' or a \'/t/\' to signal either a post ID or topic ID respectively.</p>');
+    }
+    
   });
 });
 

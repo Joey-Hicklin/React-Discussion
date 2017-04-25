@@ -38,6 +38,20 @@ const topic = () => {
 		}
 	};
 
+	const topicPostIsFetching = (state = false, action) => {
+		switch(action.type) {
+			case 'FETCH_TOPIC_POST':
+				return true;
+				break;
+			case 'RECIEVE_TOPIC_POST':
+				return false;
+				break;
+			default:
+				return state;
+				break;
+		}
+	};
+
 	const postNumIsFetching = (state = false, action) => {
 		switch(action.type) {
 			case 'FETCH_POST_NUM':
@@ -67,13 +81,29 @@ const topic = () => {
 	};
 
 	const shownPosts = (state = [], action) => {
+		let newState = [];
 		switch(action.type) {
 			case 'RECIEVE_POST':
-				let newState = [];
+				// console.log('post recieved!!!!');
+				// console.dir(action.payload);
 				action.payload.forEach( (post) => {
-					newState = newState.concat(post._id);
+					newState = newState.concat(post);
 				});
 				return state.concat(newState);
+				break;
+			case 'RESET_SHOWN_POSTS':
+				return newState;
+				break;
+			default:
+				return state;
+				break;
+		}
+	}
+
+	const shownPostsInfo = (state = {}, action) => {
+		switch(action.type) {
+			case 'SET_SHOWN_POSTS_INFO':
+				return action.payload;
 				break;
 			default:
 				return state;
@@ -84,9 +114,11 @@ const topic = () => {
 	return combineReducers({
 		main,
 		topicIsFetching,
+		topicPostIsFetching,
 		postNumIsFetching,
 		postIsFetching,
-		shownPosts
+		shownPosts,
+		shownPostsInfo
 	});
 };
 

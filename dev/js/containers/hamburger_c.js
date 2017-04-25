@@ -12,40 +12,32 @@ import { fromShortID, toBase } from '../functions';
 class hamburger extends Component {
 
 	componentWillMount() {
-		const {params, location, tracker} =  this.props;
-		if(location.pathname === "/" && tracker.main === ''){
-			// TODO local storage first
-			
-			this.props.fetchDataByDate("");
+		const {params, location, tracker, topics, fetchDataByDate, fetchDataByShortID, fetchPostByID} =  this.props;
+		const {focusPath} = params;
+		const {topicIsFetching, topicPostIsFetching, main} = tracker;
 
-		}else if(params.focusPath.length < 7){
-			this.props.fetchDataByShortID(params.focusPath);
-		}else if(params.focusPath.length < 25){
-			console.log('FetchByStatementID');
-		}else{ // TODO else Catch
-			console.log("Whaddaya doin?!");
-		}
+		topicIsFetching ? null
+		: location.pathname === "/" ? main === '' ? fetchDataByDate("")
+			: null
+		: focusPath.length < 7 ? !topics[focusPath] ? fetchDataByShortID(focusPath)
+			: null
+		: focusPath.length > 6 && focusPath.length < 26 && !topicPostIsFetching ? fetchPostByID(focusPath.slice(0, -1))
+			: null
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const {params, location, fetchDataByDate, fetchDataByShortID, tracker, topics} = nextProps;
+		// console.log('hamburger props');
+		const {params, location, fetchDataByDate, fetchDataByShortID, fetchPostByID, tracker, topics, posts} = nextProps;
+		const {focusPath} = params;
+		const {topicIsFetching, topicPostIsFetching, main} = tracker;
 
-		if(tracker.topicIsFetching !== true){ // TODO if statement is not fetching
-			if(location.pathname === "/"){
-				if(tracker.main === ''){
-					// TODO check local storage first
-					fetchDataByDate("");
-				}
-			}else if(params.focusPath.length < 7){
-				if(typeof topics[params.focusPath] === 'undefined'){
-					fetchDataByShortID(params.focusPath);
-				}
-			}else if(params.focusPath.length < 25){
-				console.log('FetchByStatementID');
-			}else{ // TODO else Catch
-				console.log("Whaddaya doin?!");
-			}
-		}
+		topicIsFetching ? null
+		: location.pathname === "/" ? main === '' ? fetchDataByDate("")
+			: null
+		: focusPath.length < 7 ? !topics[focusPath] ? fetchDataByShortID(focusPath)
+			: null
+		: !focusPath.length > 26 && !topicPostIsFetching && !posts[focusPath.slice(0, -1)] ? fetchPostByID(focusPath.slice(0, -1))
+			: null
 	}
 
 	render(){
@@ -54,20 +46,21 @@ class hamburger extends Component {
 
 		return(
 			<Hamburger
-			{...rest}
-			Location={Location}
+				{...rest}
+				Location={Location}
 			/>
 		)
 	}
 }
 
 const mapStateToProps = (state, { params }) => {
-	const {...tracker} = state.tracker;
-	const {...topics} = state.topics;
+	const {topics, posts, tracker} = state;
 
 	return ({
-		tracker: {...tracker},
-		topics: {...topics}
+		topics: {...topics},
+		posts: {...posts},
+		tracker: {...tracker}
+		
 	});
 }
 

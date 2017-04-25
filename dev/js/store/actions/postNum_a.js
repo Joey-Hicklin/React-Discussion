@@ -12,20 +12,17 @@ export const recievePostNum = (data) => ({
 	payload: data
 })
 
-export const fetchPostNumData = (id, topic) => (dispatch) => {
+export const fetchPostNumData = (id, post = false) => (dispatch) => {
 
 	dispatch(fetchPostNum());
-	if(topic === true){
+	if(post === false){
 		return fetch('http://127.0.0.1:8083/posts/t/'+id).then(res => {
 			res.json().then( data => {
 				dispatch(recievePostNum({
 					data,
 					id,
-					topic: true
+					post: false
 				}));
-				// bigButtons.forceUpdate( () => {
-				// 	console.log('updated!');
-				// });
 			});
 		});
 	}else{
@@ -34,7 +31,7 @@ export const fetchPostNumData = (id, topic) => (dispatch) => {
 				dispatch(recievePostNum({
 					data,
 					id,
-					topic: false
+					post
 				}));
 			});
 		});

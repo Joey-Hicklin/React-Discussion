@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 
-export default class topic extends Component{
+export default class FocusContent extends Component{
 // TODO replace class with variable testing if active
 
 	render(){

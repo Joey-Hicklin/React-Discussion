@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 import topic from '../schemas/topics';
+import Post from '../schemas/posts';
 
 const Topic = module.exports = topic;
 
@@ -18,6 +19,11 @@ module.exports.getTopicByDate = (callback, date=Date.now()) => {
 
 module.exports.getTopicByShortID = (callback, shortID) => {
 	Topic.find({'short_id': shortID}).limit(1).exec(callback);
+}
+
+module.exports.getPostByID = (callback, ID) => {
+	const _id = mongoose.Types.ObjectId(ID);
+	Post.find({'_id': _id}).limit(1).exec(callback);
 }
 
 export default Topic;
