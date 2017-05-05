@@ -38,6 +38,7 @@ export const posts = (state = {}, action) => {
 				const { ...postEntry } = state[postID];
 				const { ...statements } = state[postID].statements;
 				const { ...statement } = state[postID].statements[i];
+				
 				return Object.assign({}, state, {
 					[postID]: {...postEntry, 
 						statements: { ...statements,

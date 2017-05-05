@@ -1,19 +1,19 @@
+
 import {combineReducers} from "redux";
 import moment from 'moment';
 
-const topic = () => {
+const tracker = () => {
 
 	const main = (state = "", action) => {
 		switch(action.type) {
 			case 'RECIEVE_TOPIC':
-
-				let weekStart = moment().day() == 0 ? moment().day(-6).startOf('day') : moment().day(1).startOf('day');
-
-				let latest = action.payload[0].dates_discussed.length-1;
-				let recievedDate = Date.parse(new Date(action.payload[0].dates_discussed[latest]));
+				const { dates_discussed, short_id } = action.payload[0];
+				const weekStart = moment().day() == 0 ? moment().day(-6).startOf('day') : moment().day(1).startOf('day');
+				const latest = dates_discussed.length-1;
+				const recievedDate = Date.parse(new Date(dates_discussed[latest]));
 
 				if(recievedDate == weekStart){
-					return action.payload[0].short_id;
+					return short_id;
 				}else{
 					return state;
 				}
@@ -84,8 +84,6 @@ const topic = () => {
 		let newState = [];
 		switch(action.type) {
 			case 'RECIEVE_POST':
-				// console.log('post recieved!!!!');
-				// console.dir(action.payload);
 				action.payload.forEach( (post) => {
 					newState = newState.concat(post);
 				});
@@ -122,6 +120,6 @@ const topic = () => {
 	});
 };
 
-export default topic;
+export default tracker;
 
 export const getId = (state) => state.topic.main;

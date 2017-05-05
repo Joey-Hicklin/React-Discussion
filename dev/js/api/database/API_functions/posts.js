@@ -35,7 +35,7 @@ module.exports.getPosts = (topic, topicId, params={}, callback) => {
 
 		let Sort;
 
-		// TODO debug day adjustment so it will work for previous dates
+		// TODO compensate to allow for previous weeks
 
 		const Day =
 			moment().day() !== 0 ? day === '0' ? 7
@@ -43,14 +43,8 @@ module.exports.getPosts = (topic, topicId, params={}, callback) => {
 			: day === '0' ? day
 			: parseInt(day) - 7;
 
-		// monday ===  -6  but should be  1
-		// tuesday ===  -5  but should be  2
-		// wednesday ===  -4  but should be  3
-		/// thursday ===  -3  but should be  4
-		// friday ===  -2  but should be  5
-		// saturday ===  -1  but should be  6
 		const dateTime = moment().day(Day).hour(time).toDate();
-		console.log(dateTime);
+		// console.log(dateTime);
 
 		switch(sort){
 			case "0":

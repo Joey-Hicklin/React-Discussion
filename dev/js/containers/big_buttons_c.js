@@ -6,15 +6,14 @@ import { getTopicID } from '../store/reducers/topics_r';
 
 import * as postNum from '../store/actions/postNum_a';
 import * as topic from '../store/actions/topic_a';
-const actions = Object.assign({}, {...postNum, ...topic});
+export const actions = Object.assign({}, {...postNum, ...topic});
 
 import BigButtons from '../presentationals/big_buttons_p';
 
 
-class SmartBigButtons extends Component{
+export class SmartBigButtons extends Component{
 
 	componentWillMount() {
-		// console.log('big buttons mount');
 		const {location, params, focusID, tracker, agreeNum, fetchPostNumData} = this.props;
 		const {postNumIsFetching, topicIsFetching} = tracker;
 		const {focusPath} = params;
@@ -22,10 +21,8 @@ class SmartBigButtons extends Component{
 		if(location.pathname.indexOf('read') !== -1){
 			if(focusID !== '' && !postNumIsFetching && !topicIsFetching && agreeNum === ''){
 				if(focusPath.length < 7){
-					// console.log('topic PostNum');
 					fetchPostNumData(focusID);
 				}else{
-					// console.log('statement PostNum');
 					fetchPostNumData(focusID, focusPath);
 				}
 				
@@ -34,28 +31,25 @@ class SmartBigButtons extends Component{
 	}
 
 	componentWillReceiveProps(nextProps) {
-		// console.log('big buttons props');
 		const {location, params, focusID, tracker, agreeNum, fetchPostNumData, posts} = nextProps;
 		const {postNumIsFetching, topicIsFetching} = tracker;
 		const {focusPath} = params;
 
-		this.postSpeak =
-			!focusPath ? 'blank focusPath'
-				: !posts[focusPath.slice(0, -1)] ? 'Post fetch not recieved yet'
-					: new Date(posts[focusPath.slice(0, -1)].expiration).getTime() > new Date().getTime() ? true
-						: false;
-
 		if(location.pathname.indexOf('read') !== -1){
 			if(focusID !== '' && !postNumIsFetching && !topicIsFetching && agreeNum === ''){
 				if(params.focusPath.length < 7){
-					// console.log('topic PostNum');
 					fetchPostNumData(focusID);
 				}else{
-					// console.log('statement PostNum');
 					fetchPostNumData(focusID, focusPath);
 				}
 			}
 		}
+
+		this.postSpeak =
+			!focusPath ? 'blank focusPath'
+			: !posts[focusPath.slice(0, -1)] ? 'Post fetch not recieved yet'
+			: new Date(posts[focusPath.slice(0, -1)].expiration).getTime() > new Date().getTime() ? true
+			: false;
 	}
 	
 	render(){
@@ -129,7 +123,7 @@ class SmartBigButtons extends Component{
 	}
 }
 
-const mapStateToProps = (state, { params }) => {
+export const mapStateToProps = (state, { params }) => {
 	const {focusPath} = params;
 	const {posts, topics, tracker} = state;
 

@@ -30,6 +30,7 @@ export const recieveTopicPost = (data) => ({
 export const fetchDataByDate = (date) => (dispatch) => {
 	dispatch(fetchTopic());
 
+
 	return fetch('http://127.0.0.1:8083/topic/'+date).then(res => {
 		res.json().then( data => {
 			dispatch(recieveTopic(data));

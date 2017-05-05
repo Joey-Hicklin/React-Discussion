@@ -34,10 +34,6 @@ class SmartFocusContent extends Component{
 		const prevShortID = toBase(62, (fromShortID(shortID) -1));
 		const nextShortID = toBase(62, (fromShortID(shortID) +1));
 
-		// const postID =
-		// 	focusPath ? focusPath.slice(0, -1)
-		// 	: '';
-
 		const prevChevron =
 			!initAction ? prevShortID
 			: prevShortID + '/' + initAction;
